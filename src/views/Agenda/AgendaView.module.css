@@ -1,26 +1,45 @@
-.page { padding: 32px; max-width: 900px; }
-.eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #e9ab3a; font-weight: 600; margin-bottom: 8px; }
-.head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
-.title { font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 800; color: #f0f0f5; margin: 0 0 8px; }
-.subtitle { font-size: 14px; color: rgba(255,255,255,0.4); margin: 0; }
-.primaryBtn { padding: 11px 22px; background: linear-gradient(135deg, #e9ab3a, #c8892a); border: none; border-radius: 10px; color: #08080e; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; }
-.ghostBtn { padding: 10px 18px; background: transparent; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: rgba(255,255,255,0.4); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; }
-.loading { color: rgba(255,255,255,0.3); font-family: 'DM Sans', sans-serif; padding: 40px 0; }
+.page { padding: 32px; height: calc(100vh - 80px); display: flex; flex-direction: column; }
+.eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #e9ab3a; font-weight: 600; margin-bottom: 4px; }
+.head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
+.headLeft {}
+.headRight { display: flex; align-items: center; gap: 16px; }
+.title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: #f0f0f5; margin: 0; }
+.navRow { display: flex; align-items: center; gap: 8px; }
+.navBtn { width: 32px; height: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0f0f5; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.todayBtn { padding: 6px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0f0f5; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
+.monthLabel { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #f0f0f5; text-transform: capitalize; min-width: 140px; }
+.primaryBtn { padding: 10px 20px; background: linear-gradient(135deg, #e9ab3a, #c8892a); border: none; border-radius: 10px; color: #08080e; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; }
+.ghostBtn { padding: 8px 14px; background: transparent; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.4); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
+.loading { color: rgba(255,255,255,0.3); font-family: 'DM Sans', sans-serif; padding: 40px; text-align: center; }
 .empty { text-align: center; padding: 80px 0; }
 .emptyIcon { font-size: 48px; margin-bottom: 16px; }
 .emptyTitle { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: #f0f0f5; margin: 0 0 8px; }
 .emptyDesc { font-size: 14px; color: rgba(255,255,255,0.4); margin: 0 0 24px; }
-.calendar { display: flex; flex-direction: column; gap: 28px; }
-.dayBlock {}
-.dayLabel { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #e9ab3a; text-transform: capitalize; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-.eventList { display: flex; flex-direction: column; gap: 10px; }
-.eventCard { background: #101018; border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 16px 18px; cursor: pointer; transition: border-color 0.15s; }
-.eventCard:hover { border-color: rgba(233,171,58,0.4); }
-.eventTime { font-size: 12px; color: #5ba3f5; font-weight: 600; margin-bottom: 4px; }
-.eventTitle { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #f0f0f5; margin-bottom: 6px; }
-.eventMeta { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+/* Calendrier */
+.calendarWrap { flex: 1; overflow: hidden; display: flex; flex-direction: column; background: #0d0d16; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; }
+.calHeader { display: grid; grid-template-columns: 56px repeat(7, 1fr); border-bottom: 1px solid rgba(255,255,255,0.07); flex-shrink: 0; }
+.timeGutter { width: 56px; flex-shrink: 0; }
+.dayHeader { padding: 12px 8px; text-align: center; border-left: 1px solid rgba(255,255,255,0.05); }
+.dayHeaderToday { background: rgba(233,171,58,0.06); }
+.dayName { display: block; font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.dayNum { display: inline-block; font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.6); width: 32px; height: 32px; line-height: 32px; border-radius: 50%; }
+.dayNumToday { background: #e9ab3a; color: #08080e; }
+.calBody { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 56px repeat(7, 1fr); }
+.timeGutter { display: flex; flex-direction: column; }
+.timeSlot { height: 60px; padding: 4px 8px 0; font-size: 10px; color: rgba(255,255,255,0.2); text-align: right; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.dayCol { position: relative; border-left: 1px solid rgba(255,255,255,0.05); }
+.dayColToday { background: rgba(233,171,58,0.03); }
+.hourCell { height: 60px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.event { position: absolute; left: 2px; right: 2px; border-radius: 6px; padding: 4px 6px; cursor: pointer; overflow: hidden; opacity: 0.9; transition: opacity 0.15s; z-index: 1; }
+.event:hover { opacity: 1; }
+.eventTitle { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: #08080e; line-height: 1.3; }
+.eventTime { font-size: 10px; color: rgba(0,0,0,0.6); margin-top: 2px; }
+
+/* Modal */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
-.modalCard { background: #101018; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 16px; }
+.modalCard { background: #101018; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 14px; }
 .modalTitle { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #f0f0f5; margin: 0; }
 .modalMeta { font-size: 13px; color: rgba(255,255,255,0.4); }
 .modalDesc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; margin: 0; }
+.modalActions { display: flex; gap: 12px; margin-top: 8px; }
