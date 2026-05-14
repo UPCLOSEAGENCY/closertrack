@@ -40,5 +40,12 @@ export function useLeads() {
     setLeads((prev) => prev.filter((l) => l.id !== id));
   }, []);
 
-  return { leads, loading, addLead, updateLead, deleteLead };
+  const resetMissionLeads = useCallback(async (missionId) => {
+    if (!user) return;
+    const { error } = await supabase.from('leads').delete().eq('user_id', user.id).eq('mission_id', missionId);
+    if (error) { console.error(error); return; }
+    setLeads((prev) => prev.filter((l) => l.mission_id !== missionId));
+  }, [user]);
+
+  return { leads, loading, addLead, updateLead, deleteLead, resetMissionLeads };
 }

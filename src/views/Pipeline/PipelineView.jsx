@@ -12,16 +12,29 @@ const STATUTS = [
 ];
 
 export default function PipelineView({ missions, leadsState }) {
-  const { leads, loading, addLead, updateLead, deleteLead } = leadsState;
+  const { leads, loading, addLead, updateLead, deleteLead, resetMissionLeads } = leadsState;
   const [showForm, setShowForm] = useState(false);
   const [selectedMissionId, setSelectedMissionId] = useState('all');
   const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', callDate: '' });
   const [dragging, setDragging] = useState(null);
   const [dragOver, setDragOver] = useState(null);
 
+  const activeMission = selectedMissionId === 'all'
+    ? null
+    : missions.find((m) => m.id === selectedMissionId);
+
   const filteredLeads = selectedMissionId === 'all'
     ? leads
     : leads.filter((l) => l.mission_id === selectedMissionId);
+
+  const handleReset = async () => {
+    if (!activeMission) return;
+    const count = filteredLeads.length;
+    if (count === 0) { alert('Ce pipeline est déjà vide.'); return; }
+    const ok = confirm(`Réinitialiser le pipeline « ${activeMission.name} » ?\n\nCela supprimera définitivement ${count} lead${count > 1 ? 's' : ''}.`);
+    if (!ok) return;
+    await resetMissionLeads(activeMission.id);
+  };
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -51,11 +64,18 @@ export default function PipelineView({ missions, leadsState }) {
     <div className={styles.page}>
       <header className={styles.head}>
         <div>
-          <div className={styles.eyebrow}>Gestion des leads</div>
-          <h1 className={styles.title}>Pipeline</h1>
+          <div className={styles.eyebrow}>{activeMission ? 'Pipeline mission' : 'Vue globale'}</div>
+          <h1 className={styles.title}>{activeMission ? activeMission.name : 'Toutes missions'}</h1>
           <p className={styles.subtitle}>{total} lead{total > 1 ? 's' : ''} · {taux}% conversion · {gagne} gagné{gagne > 1 ? 's' : ''}</p>
         </div>
-        <button className={styles.primaryBtn} onClick={() => showForm ? setShowForm(false) : openForm()}>+ Nouveau lead</button>
+        <div className={styles.headActions}>
+          {activeMission && (
+            <button className={styles.dangerBtn} onClick={handleReset} title="Vider tous les leads de cette mission">
+              Réinitialiser le pipeline
+            </button>
+          )}
+          <button className={styles.primaryBtn} onClick={() => showForm ? setShowForm(false) : openForm()}>+ Nouveau lead</button>
+        </div>
       </header>
 
       <div className={styles.missionTabs}>
@@ -88,7 +108,9 @@ export default function PipelineView({ missions, leadsState }) {
             <div className={styles.field}><label className={styles.label}>Téléphone</label><input className={styles.input} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+33 6 ..." /></div>
             <div className={styles.field}><label className={styles.label}>Email</label><input className={styles.input} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="lead@email.com" /></div>
             <div className={styles.field}><label className={styles.label}>Date du call</label><input className={styles.input} type="datetime-local" value={form.callDate} onChange={(e) => setForm({ ...form, callDate: e.target.value })} /></div>
-            <div className={styles.field}><label className={styles.label}>Mission</label><select className={styles.select} value={form.missionId} onChange={(e) => setForm({ ...form, missionId: e.target.value })}><option value="">— Aucune —</option>{missions.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</select></div>
+            {!activeMission && (
+              <div className={styles.field}><label className={styles.label}>Mission</label><select className={styles.select} value={form.missionId} onChange={(e) => setForm({ ...form, missionId: e.target.value })}><option value="">— Aucune —</option>{missions.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</select></div>
+            )}
             <div className={styles.field}><label className={styles.label}>Source</label><select className={styles.select} value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })}><option value="manuel">Manuel</option><option value="calendly">Calendly</option><option value="instagram">Instagram</option><option value="whatsapp">WhatsApp</option><option value="referral">Référence</option></select></div>
           </div>
           <div className={styles.formActions}>

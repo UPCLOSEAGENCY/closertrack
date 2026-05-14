@@ -8,6 +8,26 @@
 .primaryBtn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px -10px var(--gold-glow); }
 .ghostBtn { padding: 10px 18px; background: transparent; border: 1px solid var(--border-strong); border-radius: 10px; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
 
+.headActions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+.dangerBtn {
+  padding: 11px 18px;
+  background: transparent;
+  border: 1px solid rgba(214, 69, 61, 0.25);
+  border-radius: 10px;
+  color: var(--danger);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+  white-space: nowrap;
+}
+.dangerBtn:hover {
+  background: rgba(214, 69, 61, 0.08);
+  border-color: rgba(214, 69, 61, 0.4);
+}
+
 .missionTabs {
   display: flex;
   gap: 6px;
