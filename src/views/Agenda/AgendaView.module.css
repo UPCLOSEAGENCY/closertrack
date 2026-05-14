@@ -37,7 +37,7 @@
 /* Grid */
 .wrap{flex:1;display:flex;flex-direction:column;min-height:0;border-top:1px solid rgba(255,255,255,0.05)}
 .ch{display:grid;grid-template-columns:48px repeat(7,1fr);border-bottom:1px solid rgba(255,255,255,0.06);background:#0a0a14;flex-shrink:0}
-.gt{border-right:1px solid rgba(255,255,255,0.05)}
+
 .dh{padding:12px 0 10px;text-align:center;border-left:1px solid rgba(255,255,255,0.04)}
 .dht{background:rgba(233,171,58,0.04)}
 .dn{display:block;font-size:9px;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:5px}
