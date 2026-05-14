@@ -4,9 +4,10 @@ const TABS = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'forecast',  label: 'Prévisionnel' },
   { id: 'pipeline',  label: 'Pipeline' },
+  { id: 'agenda',    label: 'Agenda' },
   { id: 'missions',  label: 'Missions' },
   { id: 'invoice',   label: 'Facturation' },
-  { id: 'settings',  label: '⚙ Paramètres' },
+  { id: 'settings',  label: '⚙' },
 ];
 
 export default function Header({ view, onChangeView, onNewMission, user, onSignOut }) {
