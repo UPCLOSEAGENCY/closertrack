@@ -5,10 +5,10 @@ import styles from './SettingsView.module.css';
 
 const FUNCTION_URL = 'https://vjrdyzohkslhtoddilag.supabase.co/functions/v1/calendly-webhook';
 
-export default function SettingsView() {
+export default function SettingsView({ missions = [] }) {
   const { user } = useAuth();
-  const [token, setToken]     = useState('');
-  const [copied, setCopied]   = useState(false);
+  const [token, setToken] = useState('');
+  const [copiedKey, setCopiedKey] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -16,13 +16,18 @@ export default function SettingsView() {
       .then(({ data }) => { if (data) setToken(data.webhook_token); });
   }, [user]);
 
-  const webhookUrl = `${FUNCTION_URL}?token=${token}`;
+  const buildUrl = (missionId) =>
+    missionId
+      ? `${FUNCTION_URL}?token=${token}&mission=${missionId}`
+      : `${FUNCTION_URL}?token=${token}`;
 
-  const copy = () => {
-    navigator.clipboard.writeText(webhookUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copy = (key, url) => {
+    navigator.clipboard.writeText(url);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
   };
+
+  const activeMissions = missions.filter((m) => m.status === 'active');
 
   return (
     <div className={styles.page}>
@@ -37,7 +42,7 @@ export default function SettingsView() {
           <div className={styles.cardIcon}>📅</div>
           <div>
             <h2 className={styles.cardTitle}>Connexion Calendly</h2>
-            <p className={styles.cardDesc}>Les leads qui bookent sur ton Calendly apparaissent automatiquement dans ton Pipeline.</p>
+            <p className={styles.cardDesc}>Chaque mission a son propre webhook Calendly. Les leads bookés via le lien d'une mission atterrissent directement dans son pipeline.</p>
           </div>
         </div>
 
@@ -48,7 +53,7 @@ export default function SettingsView() {
           </div>
           <div className={styles.step}>
             <span className={styles.stepNum}>2</span>
-            <span>Clique <strong>"New Webhook"</strong> et colle l'URL ci-dessous</span>
+            <span>Crée un <strong>webhook par mission</strong> et colle l'URL correspondante</span>
           </div>
           <div className={styles.step}>
             <span className={styles.stepNum}>3</span>
@@ -56,16 +61,51 @@ export default function SettingsView() {
           </div>
         </div>
 
-        <div className={styles.urlBox}>
-          <div className={styles.urlLabel}>Ton URL Webhook unique</div>
-          <div className={styles.urlRow}>
-            <code className={styles.url}>{token ? webhookUrl : 'Chargement...'}</code>
-            <button className={`${styles.copyBtn} ${copied ? styles.copied : ''}`} onClick={copy}>
-              {copied ? '✓ Copié !' : 'Copier'}
-            </button>
+        <div className={styles.urlSection}>
+          <div className={styles.urlSectionLabel}>Webhook général (sans mission)</div>
+          <div className={styles.urlBox}>
+            <div className={styles.urlRow}>
+              <code className={styles.url}>{token ? buildUrl(null) : 'Chargement...'}</code>
+              <button
+                className={`${styles.copyBtn} ${copiedKey === 'global' ? styles.copied : ''}`}
+                onClick={() => copy('global', buildUrl(null))}
+                disabled={!token}
+              >
+                {copiedKey === 'global' ? '✓ Copié !' : 'Copier'}
+              </button>
+            </div>
+            <p className={styles.urlNote}>Les leads arrivent dans la vue "Tous" sans mission assignée.</p>
           </div>
-          <p className={styles.urlNote}>⚠️ Ne partage jamais cette URL — elle est unique à ton compte.</p>
         </div>
+
+        <div className={styles.urlSection}>
+          <div className={styles.urlSectionLabel}>Webhooks par mission active</div>
+          {activeMissions.length === 0 && (
+            <div className={styles.emptyMissions}>
+              Aucune mission active. Crée une mission pour obtenir son webhook dédié.
+            </div>
+          )}
+          {activeMissions.map((m) => (
+            <div key={m.id} className={styles.urlBox}>
+              <div className={styles.missionHeader}>
+                <span className={styles.missionDot} />
+                <span className={styles.missionName}>{m.name}</span>
+              </div>
+              <div className={styles.urlRow}>
+                <code className={styles.url}>{token ? buildUrl(m.id) : 'Chargement...'}</code>
+                <button
+                  className={`${styles.copyBtn} ${copiedKey === m.id ? styles.copied : ''}`}
+                  onClick={() => copy(m.id, buildUrl(m.id))}
+                  disabled={!token}
+                >
+                  {copiedKey === m.id ? '✓ Copié !' : 'Copier'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p className={styles.urlNote}>⚠️ Ne partage jamais ces URLs — elles sont uniques à ton compte.</p>
       </div>
     </div>
   );

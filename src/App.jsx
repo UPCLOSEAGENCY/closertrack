@@ -80,7 +80,7 @@ function AppInner() {
         {view === 'pipeline'  && <PipelineView missions={missions} leadsState={leadsState} />}
         {view === 'agenda'    && <AgendaView />}
         {view === 'invoice'   && <InvoiceView missions={missions} sales={sales} />}
-        {view === 'settings'  && <SettingsView />}
+        {view === 'settings'  && <SettingsView missions={missions} />}
         {view === 'profile'   && <ProfileView />}
         {view === 'missions'  && !selectedMission && <MissionsView missions={missions} sales={sales} onOpen={openMission} onNewMission={() => setModal({ kind: 'mission' })} />}
         {view === 'missions'  && selectedMission && (
