@@ -15,14 +15,14 @@ const STATUTS = [
 export default function PipelineView({ missions }) {
   const { leads, loading, addLead, updateLead, deleteLead } = useLeads();
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', notes: '', callDate: '' });
+  const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', callDate: '' });
   const [dragging, setDragging] = useState(null);
   const [dragOver, setDragOver] = useState(null);
 
   const handleAdd = async (e) => {
     e.preventDefault();
     await addLead(form);
-    setForm({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', notes: '', callDate: '' });
+    setForm({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', callDate: '' });
     setShowForm(false);
   };
 
@@ -35,7 +35,7 @@ export default function PipelineView({ missions }) {
 
   const gagne = leads.filter(l => l.status === 'gagne').length;
   const total = leads.length;
-  const tauxConversion = total > 0 ? Math.round((gagne / total) * 100) : 0;
+  const taux = total > 0 ? Math.round((gagne / total) * 100) : 0;
 
   if (loading) return <div className={styles.loading}>Chargement…</div>;
 
@@ -45,25 +45,10 @@ export default function PipelineView({ missions }) {
         <div>
           <div className={styles.eyebrow}>Gestion des leads</div>
           <h1 className={styles.title}>Pipeline</h1>
-          <p className={styles.subtitle}>{total} lead{total > 1 ? 's' : ''} · {tauxConversion}% conversion</p>
+          <p className={styles.subtitle}>{total} lead{total > 1 ? 's' : ''} · {taux}% conversion · {gagne} gagné{gagne > 1 ? 's' : ''}</p>
         </div>
-        <button className={styles.primaryBtn} onClick={() => setShowForm(!showForm)}>
-          + Nouveau lead
-        </button>
+        <button className={styles.primaryBtn} onClick={() => setShowForm(!showForm)}>+ Nouveau lead</button>
       </header>
-
-      <div className={styles.stats}>
-        {STATUTS.map((s) => {
-          const count = leads.filter(l => l.status === s.id).length;
-          return (
-            <div key={s.id} className={styles.statPill}>
-              <span className={styles.statPillDot} style={{ background: s.color }} />
-              <span className={styles.statPillLabel}>{s.label}</span>
-              <span className={styles.statPillValue}>{count}</span>
-            </div>
-          );
-        })}
-      </div>
 
       {showForm && (
         <form onSubmit={handleAdd} className={styles.form}>
@@ -117,7 +102,7 @@ export default function PipelineView({ missions }) {
             <div
               key={statut.id}
               className={styles.col}
-              style={{ borderColor: isOver ? statut.color + '40' : undefined }}
+              style={{ borderColor: isOver ? statut.color + '50' : undefined, background: isOver ? statut.color + '08' : undefined }}
               onDragOver={(e) => { e.preventDefault(); setDragOver(statut.id); }}
               onDragLeave={() => setDragOver(null)}
               onDrop={() => handleDrop(statut.id)}
