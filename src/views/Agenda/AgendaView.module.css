@@ -61,3 +61,8 @@
 .calPickerItem input { cursor: pointer; accent-color: #e9ab3a; }
 .calPickerDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .calPickerName { font-size: 13px; color: rgba(255,255,255,0.7); font-family: 'DM Sans', sans-serif; }
+.removeAccountBtn { background: transparent; border: none; color: rgba(255,255,255,0.2); font-size: 16px; cursor: pointer; margin-left: auto; }
+.removeAccountBtn:hover { color: #f87171; }
+.addAccountBtn { padding: 8px 14px; background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.15); border-radius: 8px; color: rgba(255,255,255,0.5); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; width: 100%; margin-top: 8px; }
+.addAccountBtn:hover { background: rgba(255,255,255,0.07); }
+.modalAccountBadge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 12px; }
