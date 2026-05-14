@@ -121,9 +121,18 @@
   flex-direction: column;
   gap: 8px;
   padding: 22px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.statCard:hover {
+  border-color: var(--border-glass-bright);
+  background: var(--bg-glass-hover);
 }
 
 .statLabel {
@@ -156,9 +165,12 @@
   flex-direction: column;
   gap: 10px;
   padding: 20px 24px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
 }
 
 .progressHead {
@@ -228,18 +240,23 @@
 }
 
 .saleCard {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   padding: 18px 22px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  transition: border-color 0.15s ease;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-glass);
 }
 
 .saleCard:hover {
-  border-color: var(--border-bright);
+  border-color: var(--border-glass-bright);
+  background: var(--bg-glass-hover);
+  box-shadow: var(--shadow-glass-hover);
 }
 
 .saleHeader {

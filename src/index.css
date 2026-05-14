@@ -8,9 +8,22 @@
   --border-strong: rgba(255, 255, 255, 0.1);
   --border-bright: rgba(255, 255, 255, 0.18);
 
-  --gold: #e9ab3a;
-  --gold-soft: rgba(233, 171, 58, 0.12);
-  --gold-glow: rgba(233, 171, 58, 0.35);
+  /* Glassmorphism */
+  --bg-glass: rgba(255, 255, 255, 0.025);
+  --bg-glass-strong: rgba(255, 255, 255, 0.045);
+  --bg-glass-hover: rgba(255, 255, 255, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-bright: rgba(255, 255, 255, 0.16);
+  --blur: 18px;
+  --blur-strong: 28px;
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --shadow-glass-hover: 0 14px 42px rgba(0, 0, 0, 0.45);
+  --shadow-gold: 0 0 0 1px rgba(233, 171, 58, 0.08), 0 18px 50px -18px var(--gold-glow);
+
+  --gold: #E8A020;
+  --gold-bright: #f5c75c;
+  --gold-soft: rgba(232, 160, 32, 0.12);
+  --gold-glow: rgba(232, 160, 32, 0.38);
   --green: #2dd4a0;
   --green-soft: rgba(45, 212, 160, 0.12);
   --green-glow: rgba(45, 212, 160, 0.35);
@@ -18,7 +31,7 @@
   --blue-soft: rgba(91, 163, 245, 0.12);
   --blue-glow: rgba(91, 163, 245, 0.35);
 
-  --text: #f0f0f5;
+  --text: #ffffff;
   --text-muted: #8a8a99;
   --text-faint: #4a4a5a;
   --danger: #f06868;
@@ -31,6 +44,10 @@
   --font-display: 'Syne', system-ui, sans-serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
 
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.18s var(--ease-out);
+  --transition: 0.24s var(--ease-out);
+
   color-scheme: dark;
   font-family: var(--font-body);
   font-size: 14px;
@@ -39,6 +56,40 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Global glassmorphism utilities */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glass);
+}
+
+.glass-strong {
+  background: var(--bg-glass-strong);
+  backdrop-filter: blur(var(--blur-strong));
+  -webkit-backdrop-filter: blur(var(--blur-strong));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glass);
+}
+
+.glass-hover {
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
+}
+
+.glass-hover:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-glass-bright);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glass-hover);
 }
 
 * {

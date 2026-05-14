@@ -1,15 +1,25 @@
 .card {
-  background: #0d0d18;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 20px;
-  padding: 28px;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.2s;
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-glass);
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
 }
 
 .card:hover {
-  border-color: rgba(255,255,255,0.12);
+  border-color: var(--border-glass-bright);
+  background: var(--bg-glass-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glass-hover);
 }
 
 .card::before {
@@ -19,56 +29,83 @@
   left: 0;
   right: 0;
   height: 1px;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
-.gold::before { background: linear-gradient(90deg, transparent, #e9ab3a, transparent); }
-.green::before { background: linear-gradient(90deg, transparent, #2dd4a0, transparent); }
-.blue::before { background: linear-gradient(90deg, transparent, #5ba3f5, transparent); }
+.gold::before { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.green::before { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+.blue::before { background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+.danger::before { background: linear-gradient(90deg, transparent, var(--danger), transparent); }
 
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 20px;
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition);
 }
+
+.gold::after  { background: radial-gradient(220px 140px at 100% 0%, var(--gold-soft),  transparent 70%); }
+.green::after { background: radial-gradient(220px 140px at 100% 0%, var(--green-soft), transparent 70%); }
+.blue::after  { background: radial-gradient(220px 140px at 100% 0%, var(--blue-soft),  transparent 70%); }
+.danger::after { background: radial-gradient(220px 140px at 100% 0%, rgba(240,104,104,0.12), transparent 70%); }
+
+.card:hover::after { opacity: 1; }
 
 .label {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  font-weight: 500;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.12em;
+  position: relative;
+  z-index: 1;
 }
 
 .icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.gold .icon { background: rgba(233,171,58,0.12); color: #e9ab3a; }
-.green .icon { background: rgba(45,212,160,0.12); color: #2dd4a0; }
-.blue .icon { background: rgba(91,163,245,0.12); color: #5ba3f5; }
+.gold .icon   { background: rgba(232,160,32,0.14);  color: var(--gold);   box-shadow: 0 0 24px -6px var(--gold-glow); }
+.green .icon  { background: rgba(45,212,160,0.14);  color: var(--green);  box-shadow: 0 0 24px -6px var(--green-glow); }
+.blue .icon   { background: rgba(91,163,245,0.14);  color: var(--blue);   box-shadow: 0 0 24px -6px var(--blue-glow); }
+.danger .icon { background: rgba(240,104,104,0.14); color: var(--danger); box-shadow: 0 0 24px -6px rgba(240,104,104,0.35); }
 
 .value {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-display);
   font-size: 36px;
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -0.03em;
   line-height: 1;
-  margin-bottom: 8px;
+  margin: 14px 0 8px;
+  position: relative;
+  z-index: 1;
+  color: var(--text);
 }
 
-.gold .value { color: #e9ab3a; }
-.green .value { color: #2dd4a0; }
-.blue .value { color: #5ba3f5; }
+.gold .value   { color: var(--gold); }
+.green .value  { color: var(--green); }
+.blue .value   { color: var(--blue); }
+.danger .value { color: var(--danger); }
 
 .caption {
   font-size: 12px;
-  color: rgba(255,255,255,0.3);
+  color: var(--text-muted);
+  position: relative;
+  z-index: 1;
 }

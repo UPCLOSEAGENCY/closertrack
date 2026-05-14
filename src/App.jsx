@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import { useAppData } from './hooks/useAppData.js';
+import { useLeads } from './hooks/useLeads.js';
+import { useLocalStorage } from './hooks/useLocalStorage.js';
 import { supabase } from './lib/supabase.js';
 import { currentMonth } from './lib/commissions.js';
 import Sidebar from './components/Sidebar.jsx';
@@ -12,6 +14,7 @@ import InvoiceView from './views/Invoice/InvoiceView.jsx';
 import PipelineView from './views/Pipeline/PipelineView.jsx';
 import AgendaView from './views/Agenda/AgendaView.jsx';
 import SettingsView from './views/Settings/SettingsView.jsx';
+import ProfileView from './views/Profile/ProfileView.jsx';
 import Pricing from './views/Pricing.jsx';
 import AuthPage from './views/AuthPage.jsx';
 import Modal from './components/Modal.jsx';
@@ -22,10 +25,16 @@ import styles from './App.module.css';
 function AppInner() {
   const { user, signOut } = useAuth();
   const { missions, sales, loading, addMission, updateMission, deleteMission, addSale, updateSale, deleteSale } = useAppData();
+  const leadsState = useLeads();
+  const [pipelineLastSeen, setPipelineLastSeen] = useLocalStorage('pipeline_last_seen', 0);
   const [view, setView] = useState('dashboard');
   const [selectedMissionId, setSelectedMissionId] = useState(null);
   const [modal, setModal] = useState(null);
   const [subscribed, setSubscribed] = useState(null);
+
+  const newCalendlyLeads = leadsState.leads.filter(
+    (l) => l.source === 'calendly' && new Date(l.created_at).getTime() > pipelineLastSeen
+  ).length;
 
   useEffect(() => {
     if (!user) return;
@@ -48,19 +57,31 @@ function AppInner() {
   if (!subscribed) return <Pricing />;
 
   const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? null;
-  const goView = (next) => { setSelectedMissionId(null); setView(next); };
+  const goView = (next) => {
+    setSelectedMissionId(null);
+    setView(next);
+    if (next === 'pipeline') setPipelineLastSeen(Date.now());
+  };
   const openMission = (id) => { setView('missions'); setSelectedMissionId(id); };
 
   return (
     <div className={styles.app}>
-      <Sidebar view={view} onChangeView={goView} onNewMission={() => setModal({ kind: 'mission' })} user={user} onSignOut={signOut} />
+      <Sidebar
+        view={view}
+        onChangeView={goView}
+        onNewMission={() => setModal({ kind: 'mission' })}
+        user={user}
+        onSignOut={signOut}
+        pipelineBadge={newCalendlyLeads}
+      />
       <main className={styles.main}>
-        {view === 'dashboard' && <Dashboard missions={missions} sales={sales} onOpenMission={openMission} />}
+        {view === 'dashboard' && <Dashboard missions={missions} sales={sales} leads={leadsState.leads} onOpenMission={openMission} />}
         {view === 'forecast'  && <Forecast missions={missions} sales={sales} />}
-        {view === 'pipeline'  && <PipelineView missions={missions} />}
+        {view === 'pipeline'  && <PipelineView missions={missions} leadsState={leadsState} />}
         {view === 'agenda'    && <AgendaView />}
         {view === 'invoice'   && <InvoiceView missions={missions} sales={sales} />}
         {view === 'settings'  && <SettingsView />}
+        {view === 'profile'   && <ProfileView />}
         {view === 'missions'  && !selectedMission && <MissionsView missions={missions} sales={sales} onOpen={openMission} onNewMission={() => setModal({ kind: 'mission' })} />}
         {view === 'missions'  && selectedMission && (
           <MissionDetail

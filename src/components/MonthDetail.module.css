@@ -1,11 +1,14 @@
 .wrap {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-xl);
   padding: 26px 28px;
   display: flex;
   flex-direction: column;
   gap: 18px;
+  box-shadow: var(--shadow-glass);
 }
 
 .header {

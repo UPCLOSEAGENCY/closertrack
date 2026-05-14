@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLeads } from '../../hooks/useLeads.js';
 import styles from './PipelineView.module.css';
 
 const STATUTS = [
@@ -12,8 +11,8 @@ const STATUTS = [
   { id: 'perdu',         label: 'Perdu',         color: '#6b7280', bg: 'rgba(107,114,128,0.05)', empty: '○' },
 ];
 
-export default function PipelineView({ missions }) {
-  const { leads, loading, addLead, updateLead, deleteLead } = useLeads();
+export default function PipelineView({ missions, leadsState }) {
+  const { leads, loading, addLead, updateLead, deleteLead } = leadsState;
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', callDate: '' });
   const [dragging, setDragging] = useState(null);

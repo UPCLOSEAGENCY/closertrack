@@ -8,6 +8,7 @@ import styles from './InvoiceView.module.css';
 export default function InvoiceView({ missions, sales }) {
   const { user } = useAuth();
   const printRef = useRef();
+  const generatingRef = useRef(false);
   const [closer, setCloser] = useState({ name: '', email: '', address: '', siret: '', iban: '' });
   const [client, setClient] = useState({ name: '', address: '' });
   const [selectedMissionId, setSelectedMissionId] = useState('');
@@ -15,15 +16,19 @@ export default function InvoiceView({ missions, sales }) {
   const [invoiceDate, setInvoiceDate] = useState(new Date().toLocaleDateString('fr-FR'));
   const [saved, setSaved] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [profileLoaded, setProfileLoaded] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     supabase.from('profiles').select('closer_info, invoice_counter').eq('id', user.id).single()
       .then(({ data }) => {
-        if (data?.closer_info) setCloser(data.closer_info);
+        if (data?.closer_info) setCloser((prev) => ({ ...prev, ...data.closer_info }));
         if (data?.invoice_counter !== undefined) setInvoiceCounter(data.invoice_counter);
+        setProfileLoaded(true);
       });
   }, [user]);
+
+  const closerComplete = closer.name && closer.email;
 
   const year = new Date().getFullYear();
   const invoiceNumber = `${year}-${String(invoiceCounter + 1).padStart(3, '0')}`;
@@ -48,16 +53,33 @@ export default function InvoiceView({ missions, sales }) {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const handlePrint = async () => {
-    setGenerating(true);
-    // Incrémente le compteur
-    const newCounter = invoiceCounter + 1;
-    await supabase.from('profiles').update({ invoice_counter: newCounter }).eq('id', user.id);
-    setInvoiceCounter(newCounter);
+  const releaseLock = () => {
+    setGenerating(false);
+    generatingRef.current = false;
+  };
 
-    const content = printRef.current.innerHTML;
-    const win = window.open('', '_blank');
-    win.document.write(`
+  const handlePrint = async () => {
+    if (generatingRef.current) return;
+    generatingRef.current = true;
+    setGenerating(true);
+    try {
+      const newCounter = invoiceCounter + 1;
+      const { error } = await supabase.from('profiles').update({ invoice_counter: newCounter }).eq('id', user.id);
+      if (error) {
+        alert("Impossible d'incrémenter le numéro de facture. Réessaie.");
+        releaseLock();
+        return;
+      }
+      setInvoiceCounter(newCounter);
+
+      const content = printRef.current.innerHTML;
+      const win = window.open('', '_blank');
+      if (!win) {
+        alert("Le navigateur a bloqué l'ouverture de la fenêtre d'impression. Autorise les popups pour ce site.");
+        releaseLock();
+        return;
+      }
+      win.document.write(`
       <html><head><title>Facture ${invoiceNumber}</title>
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -91,9 +113,16 @@ export default function InvoiceView({ missions, sales }) {
         @media print { body { padding: 20px; } }
       </style></head><body>${content}</body></html>
     `);
-    win.document.close();
-    win.focus();
-    setTimeout(() => { win.print(); win.close(); setGenerating(false); }, 500);
+      win.document.close();
+      win.focus();
+      setTimeout(() => {
+        try { win.print(); win.close(); } catch { /* user closed */ }
+        releaseLock();
+      }, 500);
+    } catch (err) {
+      console.error(err);
+      releaseLock();
+    }
   };
 
   const invoiceHTML = canGenerate ? `
@@ -203,7 +232,15 @@ export default function InvoiceView({ missions, sales }) {
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Aperçu — {invoiceNumber}</h2>
             {!canGenerate ? (
-              <div className={styles.empty}>Remplis les infos à gauche pour voir l'aperçu</div>
+              <div className={styles.empty}>
+                {profileLoaded && !closerComplete
+                  ? "Renseigne ton nom et ton email pour générer une facture."
+                  : !client.name
+                  ? "Indique le nom du client / agence."
+                  : !selectedMissionId
+                  ? "Sélectionne une mission."
+                  : "Remplis les infos à gauche pour voir l'aperçu."}
+              </div>
             ) : (
               <>
                 <div className={styles.previewBox}>

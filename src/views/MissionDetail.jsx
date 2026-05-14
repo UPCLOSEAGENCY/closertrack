@@ -20,6 +20,26 @@ import styles from './MissionDetail.module.css';
 const STATUS_LABELS = { pending: 'En attente', paid: 'Payé', cancelled: 'Annulé' };
 const STATUS_COLORS = { pending: '#5ba3f5', paid: '#2dd4a0', cancelled: '#f87171' };
 
+function csvCell(v) {
+  const s = v == null ? '' : String(v);
+  if (/[",;\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+function downloadCSV(filename, rows) {
+  const csv = rows.map((r) => r.map(csvCell).join(';')).join('\n');
+  const bom = '﻿';
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 export default function MissionDetail({
   mission, sales, onBack, onAddSale, onEditSale, onDeleteSale,
   onEdit, onDelete, onToggleStatus,
@@ -53,11 +73,57 @@ export default function MissionDetail({
     setStatus(saleId, index, next);
   };
 
+  const exportCSV = () => {
+    const header = [
+      'Client',
+      'Date vente',
+      'Montant vente (€)',
+      'Taux (%)',
+      'Commission totale (€)',
+      'Nb échéances',
+      'Échéance n°',
+      'Mois échéance',
+      'Montant échéance (€)',
+      'Statut',
+    ];
+    const rows = [header];
+    for (const sale of sales) {
+      const instalments = buildInstallments(sale);
+      for (const inst of instalments) {
+        const st = getStatus(sale.id, inst.index);
+        rows.push([
+          sale.client,
+          sale.saleMonth,
+          sale.amount.toFixed(2).replace('.', ','),
+          sale.rate.toFixed(2).replace('.', ','),
+          totalCommission(sale).toFixed(2).replace('.', ','),
+          sale.installments,
+          `${inst.index}/${inst.total}`,
+          inst.month,
+          inst.amount.toFixed(2).replace('.', ','),
+          STATUS_LABELS[st] || st,
+        ]);
+      }
+    }
+    const safeName = mission.name.replace(/[^\w-]+/g, '_');
+    const date = new Date().toISOString().slice(0, 10);
+    downloadCSV(`ventes_${safeName}_${date}.csv`, rows);
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.topBar}>
         <button type="button" className={styles.backBtn} onClick={onBack}>← Missions</button>
         <div className={styles.topActions}>
+          <button
+            type="button"
+            className={styles.ghostBtn}
+            onClick={exportCSV}
+            disabled={sales.length === 0}
+            title={sales.length === 0 ? 'Aucune vente à exporter' : 'Télécharger les ventes au format CSV'}
+          >
+            ⤓ Exporter CSV
+          </button>
           <button type="button" className={styles.ghostBtn} onClick={onToggleStatus}>
             {mission.status === 'active' ? 'Marquer terminée' : 'Réactiver'}
           </button>
