@@ -219,7 +219,7 @@ export default function AgendaView() {
               <div key={di} className={`${styles.dayCol} ${day.toDateString() === today ? styles.dayColToday : ''}`}>
                 {HOURS.map(h => <div key={h} className={styles.hourCell} />)}
                 {getEventsForDay(day).map((evt) => (
-                  <div key={evt.id} className={styles.event} style={{ top: `${getEventTop(evt)}px`, height: `${getEventHeight(evt)}px`, background: ACCOUNT_COLORS[evt.accountIndex % ACCOUNT_COLORS.length] }} onClick={() => openEdit(evt)}>
+                  <div key={evt.id} className={styles.event} style={{ top: `${getEventTop(evt)}px`, height: `${getEventHeight(evt)}px`, background: ACCOUNT_COLORS[evt.accountIndex % ACCOUNT_COLORS.length] + "22", borderLeftColor: ACCOUNT_COLORS[evt.accountIndex % ACCOUNT_COLORS.length] }} onClick={() => openEdit(evt)}>
                     <div className={styles.eventTitle}>{evt.summary ?? '(Sans titre)'}</div>
                     {evt.start?.dateTime && <div className={styles.eventTime}>{new Date(evt.start.dateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</div>}
                   </div>
