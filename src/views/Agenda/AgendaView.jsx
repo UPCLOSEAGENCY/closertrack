@@ -5,6 +5,13 @@ const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const REDIRECT_URI = 'https://closertrack.vercel.app/agenda';
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
 
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 const PALETTE = ['#5ba3f5','#2dd4a0','#e9ab3a','#a78bfa','#f97316','#f43f5e','#06b6d4','#10b981'];
 const DAYS_FR = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
 const HOURS   = Array.from({ length: 16 }, (_, i) => i + 7);
@@ -254,7 +261,7 @@ export default function AgendaView() {
                 {HOURS.map(h=><div key={h} className={styles.cell}/>)}
                 {getDay(day).map(evt => (
                   <div key={evt.id} className={styles.evt}
-                    style={{ top:`${top(evt)}px`, height:`${height(evt)}px`, '--c': evt._calColor }}
+                    style={{ top:`${top(evt)}px`, height:`${height(evt)}px`, background: hexToRgba(evt._calColor||'#5ba3f5', 0.18), borderLeft: `3px solid ${evt._calColor||'#5ba3f5'}` }}
                     onClick={()=>openModal(evt)}
                   >
                     <div className={styles.evtInner}>
