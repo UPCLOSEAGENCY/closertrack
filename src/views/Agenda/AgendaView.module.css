@@ -53,3 +53,11 @@
 .editTextarea:focus { border-color: #e9ab3a; }
 .dangerBtn { padding: 10px 18px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; color: #f87171; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
 .dangerBtn:hover { background: rgba(248,113,113,0.2); }
+.calPickerBtn { padding: 8px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
+.newEventBtn { padding: 8px 16px; background: rgba(45,212,160,0.12); border: 1px solid rgba(45,212,160,0.3); border-radius: 8px; color: #2dd4a0; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+.calPicker { background: #0d0d18; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; flex-shrink: 0; }
+.calPickerTitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.3); width: 100%; }
+.calPickerItem { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.04); }
+.calPickerItem input { cursor: pointer; accent-color: #e9ab3a; }
+.calPickerDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.calPickerName { font-size: 13px; color: rgba(255,255,255,0.7); font-family: 'DM Sans', sans-serif; }
