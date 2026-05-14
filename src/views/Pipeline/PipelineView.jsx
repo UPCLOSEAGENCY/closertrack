@@ -17,6 +17,7 @@ export default function PipelineView({ missions }) {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', notes: '', callDate: '' });
   const [dragging, setDragging] = useState(null);
+  const [dragOver, setDragOver] = useState(null);
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -29,7 +30,12 @@ export default function PipelineView({ missions }) {
     if (!dragging) return;
     await updateLead(dragging, { status });
     setDragging(null);
+    setDragOver(null);
   };
+
+  const gagne = leads.filter(l => l.status === 'gagne').length;
+  const total = leads.length;
+  const tauxConversion = total > 0 ? Math.round((gagne / total) * 100) : 0;
 
   if (loading) return <div className={styles.loading}>Chargement…</div>;
 
@@ -39,12 +45,25 @@ export default function PipelineView({ missions }) {
         <div>
           <div className={styles.eyebrow}>Gestion des leads</div>
           <h1 className={styles.title}>Pipeline</h1>
-          <p className={styles.subtitle}>{leads.length} lead{leads.length > 1 ? 's' : ''} au total</p>
+          <p className={styles.subtitle}>{total} lead{total > 1 ? 's' : ''} · {tauxConversion}% conversion</p>
         </div>
         <button className={styles.primaryBtn} onClick={() => setShowForm(!showForm)}>
           + Nouveau lead
         </button>
       </header>
+
+      <div className={styles.stats}>
+        {STATUTS.map((s) => {
+          const count = leads.filter(l => l.status === s.id).length;
+          return (
+            <div key={s.id} className={styles.statPill}>
+              <span className={styles.statPillDot} style={{ background: s.color }} />
+              <span className={styles.statPillLabel}>{s.label}</span>
+              <span className={styles.statPillValue}>{count}</span>
+            </div>
+          );
+        })}
+      </div>
 
       {showForm && (
         <form onSubmit={handleAdd} className={styles.form}>
@@ -85,7 +104,7 @@ export default function PipelineView({ missions }) {
           </div>
           <div className={styles.formActions}>
             <button type="button" className={styles.ghostBtn} onClick={() => setShowForm(false)}>Annuler</button>
-            <button type="submit" className={styles.primaryBtn}>Ajouter le lead</button>
+            <button type="submit" className={styles.primaryBtn}>Ajouter</button>
           </div>
         </form>
       )}
@@ -93,8 +112,16 @@ export default function PipelineView({ missions }) {
       <div className={styles.kanban}>
         {STATUTS.map((statut) => {
           const col = leads.filter((l) => l.status === statut.id);
+          const isOver = dragOver === statut.id;
           return (
-            <div key={statut.id} className={styles.col} onDragOver={(e) => e.preventDefault()} onDrop={() => handleDrop(statut.id)}>
+            <div
+              key={statut.id}
+              className={styles.col}
+              style={{ borderColor: isOver ? statut.color + '40' : undefined }}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(statut.id); }}
+              onDragLeave={() => setDragOver(null)}
+              onDrop={() => handleDrop(statut.id)}
+            >
               <div className={styles.colHeader}>
                 <span className={styles.colDot} style={{ background: statut.color }} />
                 <span className={styles.colLabel}>{statut.label}</span>
@@ -102,10 +129,16 @@ export default function PipelineView({ missions }) {
               </div>
               <div className={styles.colCards}>
                 {col.map((lead) => (
-                  <div key={lead.id} className={styles.card} draggable onDragStart={() => setDragging(lead.id)}>
+                  <div
+                    key={lead.id}
+                    className={styles.card}
+                    draggable
+                    onDragStart={() => setDragging(lead.id)}
+                    onDragEnd={() => { setDragging(null); setDragOver(null); }}
+                  >
                     <div className={styles.cardTop}>
                       <span className={styles.cardName}>{lead.name}</span>
-                      <button className={styles.deleteBtn} onClick={() => { if (confirm('Supprimer ce lead ?')) deleteLead(lead.id); }}>×</button>
+                      <button className={styles.deleteBtn} onClick={() => { if (confirm('Supprimer ?')) deleteLead(lead.id); }}>×</button>
                     </div>
                     {lead.phone && <div className={styles.cardInfo}>📞 {lead.phone}</div>}
                     {lead.email && <div className={styles.cardInfo}>✉ {lead.email}</div>}
