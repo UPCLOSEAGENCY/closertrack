@@ -3,24 +3,25 @@ import { useLeads } from '../../hooks/useLeads.js';
 import styles from './PipelineView.module.css';
 
 const STATUTS = [
-  { id: 'nouveau',   label: 'Nouveaux',   color: '#5ba3f5' },
-  { id: 'contacte',  label: 'Contactés',  color: '#e9ab3a' },
-  { id: 'rdv',       label: 'RDV fixé',   color: '#a78bfa' },
-  { id: 'closing',   label: 'En closing', color: '#f97316' },
-  { id: 'gagne',     label: 'Gagnés',     color: '#2dd4a0' },
-  { id: 'perdu',     label: 'Perdus',     color: '#f87171' },
+  { id: 'appel_reserve', label: 'Appel réservé', color: '#5ba3f5' },
+  { id: 'r2',            label: 'R2',            color: '#a78bfa' },
+  { id: 'annule',        label: 'Annulé',        color: '#f87171' },
+  { id: 'follow_up',     label: 'Follow Up',     color: '#e9ab3a' },
+  { id: 'acompte',       label: 'Acompte',       color: '#f97316' },
+  { id: 'gagne',         label: 'Gagné',         color: '#2dd4a0' },
+  { id: 'perdu',         label: 'Perdu',         color: '#6b7280' },
 ];
 
 export default function PipelineView({ missions }) {
   const { leads, loading, addLead, updateLead, deleteLead } = useLeads();
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'nouveau', notes: '', callDate: '' });
+  const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', notes: '', callDate: '' });
   const [dragging, setDragging] = useState(null);
 
   const handleAdd = async (e) => {
     e.preventDefault();
     await addLead(form);
-    setForm({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'nouveau', notes: '', callDate: '' });
+    setForm({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', notes: '', callDate: '' });
     setShowForm(false);
   };
 
@@ -93,12 +94,7 @@ export default function PipelineView({ missions }) {
         {STATUTS.map((statut) => {
           const col = leads.filter((l) => l.status === statut.id);
           return (
-            <div
-              key={statut.id}
-              className={styles.col}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={() => handleDrop(statut.id)}
-            >
+            <div key={statut.id} className={styles.col} onDragOver={(e) => e.preventDefault()} onDrop={() => handleDrop(statut.id)}>
               <div className={styles.colHeader}>
                 <span className={styles.colDot} style={{ background: statut.color }} />
                 <span className={styles.colLabel}>{statut.label}</span>
@@ -106,12 +102,7 @@ export default function PipelineView({ missions }) {
               </div>
               <div className={styles.colCards}>
                 {col.map((lead) => (
-                  <div
-                    key={lead.id}
-                    className={styles.card}
-                    draggable
-                    onDragStart={() => setDragging(lead.id)}
-                  >
+                  <div key={lead.id} className={styles.card} draggable onDragStart={() => setDragging(lead.id)}>
                     <div className={styles.cardTop}>
                       <span className={styles.cardName}>{lead.name}</span>
                       <button className={styles.deleteBtn} onClick={() => { if (confirm('Supprimer ce lead ?')) deleteLead(lead.id); }}>×</button>
@@ -121,12 +112,7 @@ export default function PipelineView({ missions }) {
                     {lead.call_date && <div className={styles.cardInfo}>🗓 {new Date(lead.call_date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</div>}
                     <div className={styles.cardFooter}>
                       <span className={styles.cardSource}>{lead.source}</span>
-                      <select
-                        className={styles.statusSelect}
-                        value={lead.status}
-                        onChange={(e) => updateLead(lead.id, { status: e.target.value })}
-                        onClick={(e) => e.stopPropagation()}
-                      >
+                      <select className={styles.statusSelect} value={lead.status} onChange={(e) => updateLead(lead.id, { status: e.target.value })} onClick={(e) => e.stopPropagation()}>
                         {STATUTS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
                       </select>
                     </div>
