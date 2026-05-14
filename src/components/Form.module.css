@@ -72,11 +72,11 @@
 
 .segBtnActive {
   background: var(--gold);
-  color: #1a1408;
+  color: var(--text-on-gold);
   box-shadow: 0 4px 14px -4px var(--gold-glow);
 }
 
-.segBtnActive:hover { color: #1a1408; }
+.segBtnActive:hover { color: var(--text-on-gold); }
 
 .installmentGroup {
   display: grid;
@@ -104,12 +104,12 @@
 .installmentBtnActive {
   background: var(--gold);
   border-color: var(--gold);
-  color: #1a1408;
+  color: var(--text-on-gold);
   box-shadow: 0 6px 18px -6px var(--gold-glow);
 }
 
 .installmentBtnActive:hover {
-  color: #1a1408;
+  color: var(--text-on-gold);
 }
 
 @media (max-width: 540px) {
@@ -143,7 +143,7 @@
   padding: 11px 20px;
   border-radius: var(--radius-md);
   background: var(--gold);
-  color: #1a1408;
+  color: var(--text-on-gold);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.01em;

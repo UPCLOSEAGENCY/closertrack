@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(4, 4, 8, 0.7);
+  background: rgba(20, 20, 24, 0.32);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   display: grid;
@@ -14,14 +14,14 @@
 
 .modal {
   width: 100%;
-  background: rgba(16, 16, 24, 0.78);
-  backdrop-filter: blur(var(--blur-strong)) saturate(140%);
-  -webkit-backdrop-filter: blur(var(--blur-strong)) saturate(140%);
+  background: var(--bg-glass-strong);
+  backdrop-filter: blur(var(--blur-strong)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-strong)) saturate(1.4);
   border: 1px solid var(--border-glass-bright);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 24px 70px -20px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(232, 160, 32, 0.06);
+    0 24px 70px -20px rgba(10, 10, 10, 0.18),
+    0 0 0 1px rgba(232, 160, 32, 0.08);
   animation: slideUp 0.2s var(--ease-out);
   overflow: hidden;
   margin: auto;

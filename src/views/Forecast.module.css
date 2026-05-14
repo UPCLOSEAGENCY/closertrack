@@ -114,7 +114,7 @@
   font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(10,10,10, 0.04);
   padding: 3px 8px;
   border-radius: 999px;
   border: 1px solid var(--border-strong);

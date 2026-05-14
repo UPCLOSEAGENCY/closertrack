@@ -43,7 +43,7 @@
 }
 
 .neutral {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(10,10,10, 0.04);
   color: var(--text-muted);
   border-color: var(--border-strong);
 }

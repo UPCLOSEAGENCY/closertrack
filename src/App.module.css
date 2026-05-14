@@ -1,12 +1,12 @@
 .app {
   display: flex;
   min-height: 100vh;
-  background: #07070e;
+  background: var(--bg);
 }
 
 .main {
   margin-left: 240px;
   flex: 1;
   min-height: 100vh;
-  background: #07070e;
+  background: var(--bg);
 }
