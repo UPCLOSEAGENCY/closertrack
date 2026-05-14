@@ -1,19 +1,12 @@
 .app {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
+  background: #07070e;
 }
 
 .main {
+  margin-left: 240px;
   flex: 1;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 36px 32px 80px;
-}
-
-@media (max-width: 720px) {
-  .main {
-    padding: 20px 16px 60px;
-  }
+  min-height: 100vh;
+  background: #07070e;
 }

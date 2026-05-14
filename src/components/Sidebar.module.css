@@ -1,0 +1,202 @@
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #09090f;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  margin-bottom: 28px;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #e9ab3a, #c8892a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: #09090f;
+  flex-shrink: 0;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandName {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #f0f0f5;
+  line-height: 1;
+}
+
+.brandTag {
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  margin-top: 3px;
+}
+
+.newBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #e9ab3a, #c8892a);
+  border: none;
+  border-radius: 10px;
+  color: #09090f;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 28px;
+  transition: opacity 0.15s;
+}
+
+.newBtn:hover { opacity: 0.85; }
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.navLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.2);
+  padding: 0 10px;
+  margin-bottom: 6px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.45);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.navItem:hover {
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.75);
+}
+
+.navActive {
+  background: rgba(233,171,58,0.1) !important;
+  color: #e9ab3a !important;
+}
+
+.navIcon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.navLabel2 {
+  flex: 1;
+  font-weight: 500;
+}
+
+.navDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e9ab3a;
+  flex-shrink: 0;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+}
+
+.userAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5ba3f5, #3d7fd4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.userEmail {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.signOut {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.2);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  margin-top: 2px;
+}
+
+.signOut:hover { color: #f87171; }

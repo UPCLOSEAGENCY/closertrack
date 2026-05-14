@@ -3,7 +3,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import { useAppData } from './hooks/useAppData.js';
 import { supabase } from './lib/supabase.js';
 import { currentMonth } from './lib/commissions.js';
-import Header from './components/Header.jsx';
+import Sidebar from './components/Sidebar.jsx';
 import Dashboard from './views/Dashboard.jsx';
 import Forecast from './views/Forecast.jsx';
 import MissionsView from './views/MissionsView.jsx';
@@ -29,31 +29,19 @@ function AppInner() {
 
   useEffect(() => {
     if (!user) return;
-
     const params = new URLSearchParams(window.location.search);
-
     if (params.get('subscribed') === 'true') {
-      // Retour Stripe — on met à jour ET on marque comme abonné
-      supabase.from('profiles')
-        .update({ subscribed: true })
-        .eq('id', user.id)
-        .then(() => {
-          setSubscribed(true);
-          window.history.replaceState({}, '', '/');
-        });
+      supabase.from('profiles').update({ subscribed: true }).eq('id', user.id)
+        .then(() => { setSubscribed(true); window.history.replaceState({}, '', '/'); });
     } else {
-      // Vérification normale
-      supabase.from('profiles')
-        .select('subscribed')
-        .eq('id', user.id)
-        .single()
+      supabase.from('profiles').select('subscribed').eq('id', user.id).single()
         .then(({ data }) => setSubscribed(data?.subscribed ?? false));
     }
   }, [user]);
 
   if (!user) return <AuthPage />;
   if (loading || subscribed === null) return (
-    <div style={{ minHeight: '100vh', background: '#08080e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#07070e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>
       Chargement…
     </div>
   );
@@ -65,7 +53,7 @@ function AppInner() {
 
   return (
     <div className={styles.app}>
-      <Header view={view} onChangeView={goView} onNewMission={() => setModal({ kind: 'mission' })} user={user} onSignOut={signOut} />
+      <Sidebar view={view} onChangeView={goView} onNewMission={() => setModal({ kind: 'mission' })} user={user} onSignOut={signOut} />
       <main className={styles.main}>
         {view === 'dashboard' && <Dashboard missions={missions} sales={sales} onOpenMission={openMission} />}
         {view === 'forecast'  && <Forecast missions={missions} sales={sales} />}
@@ -88,6 +76,7 @@ function AppInner() {
           />
         )}
       </main>
+
       {modal?.kind === 'mission' && (
         <Modal title={modal.mission ? 'Modifier la mission' : 'Nouvelle mission'} onClose={() => setModal(null)}>
           <MissionForm mission={modal.mission} onSubmit={async (data) => { modal.mission ? await updateMission(modal.mission.id, data) : await addMission(data); setModal(null); }} onCancel={() => setModal(null)} />
