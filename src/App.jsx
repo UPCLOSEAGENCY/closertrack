@@ -29,20 +29,34 @@ function AppInner() {
 
   useEffect(() => {
     if (!user) return;
-    // Vérifie si abonné via metadata Supabase
-    supabase.from('profiles').select('subscribed').eq('id', user.id).single()
-      .then(({ data }) => setSubscribed(data?.subscribed ?? false));
-    // Détecte retour Stripe
+
     const params = new URLSearchParams(window.location.search);
+
     if (params.get('subscribed') === 'true') {
-      supabase.from('profiles').update({ subscribed: true }).eq('id', user.id);
-      setSubscribed(true);
-      window.history.replaceState({}, '', '/');
+      // Retour Stripe — on met à jour ET on marque comme abonné
+      supabase.from('profiles')
+        .update({ subscribed: true })
+        .eq('id', user.id)
+        .then(() => {
+          setSubscribed(true);
+          window.history.replaceState({}, '', '/');
+        });
+    } else {
+      // Vérification normale
+      supabase.from('profiles')
+        .select('subscribed')
+        .eq('id', user.id)
+        .single()
+        .then(({ data }) => setSubscribed(data?.subscribed ?? false));
     }
   }, [user]);
 
   if (!user) return <AuthPage />;
-  if (loading || subscribed === null) return <div style={{ minHeight: '100vh', background: '#08080e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>Chargement…</div>;
+  if (loading || subscribed === null) return (
+    <div style={{ minHeight: '100vh', background: '#08080e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>
+      Chargement…
+    </div>
+  );
   if (!subscribed) return <Pricing />;
 
   const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? null;
