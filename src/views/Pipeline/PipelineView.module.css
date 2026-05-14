@@ -8,6 +8,70 @@
 .primaryBtn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px -10px var(--gold-glow); }
 .ghostBtn { padding: 10px 18px; background: transparent; border: 1px solid var(--border-strong); border-radius: 10px; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
 
+.missionTabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  flex-shrink: 0;
+}
+.missionTabs::-webkit-scrollbar { display: none; }
+
+.missionTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--transition), border-color var(--transition), background var(--transition), box-shadow var(--transition);
+  flex-shrink: 0;
+}
+
+.missionTab:hover {
+  color: var(--text);
+  border-color: var(--border-bright);
+  background: var(--bg-card);
+}
+
+.missionTabActive {
+  color: var(--text);
+  background: var(--bg-card);
+  border-color: rgba(232, 160, 32, 0.4);
+  box-shadow: 0 0 0 1px rgba(232, 160, 32, 0.25), 0 4px 14px -6px var(--gold-glow);
+}
+
+.missionTabCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  background: rgba(10, 10, 10, 0.06);
+  border-radius: 999px;
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.missionTabActive .missionTabCount {
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+
 .form { background: var(--bg-glass); backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4); border: 1px solid var(--border-glass); border-radius: 14px; padding: 20px; margin-bottom: 20px; flex-shrink: 0; box-shadow: var(--shadow-glass); }
 .formGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
 .formActions { display: flex; gap: 10px; justify-content: flex-end; }

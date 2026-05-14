@@ -14,15 +14,25 @@ const STATUTS = [
 export default function PipelineView({ missions, leadsState }) {
   const { leads, loading, addLead, updateLead, deleteLead } = leadsState;
   const [showForm, setShowForm] = useState(false);
+  const [selectedMissionId, setSelectedMissionId] = useState('all');
   const [form, setForm] = useState({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', callDate: '' });
   const [dragging, setDragging] = useState(null);
   const [dragOver, setDragOver] = useState(null);
 
+  const filteredLeads = selectedMissionId === 'all'
+    ? leads
+    : leads.filter((l) => l.mission_id === selectedMissionId);
+
   const handleAdd = async (e) => {
     e.preventDefault();
     await addLead(form);
-    setForm({ name: '', phone: '', email: '', missionId: '', source: 'manuel', status: 'appel_reserve', callDate: '' });
+    setForm({ name: '', phone: '', email: '', missionId: selectedMissionId === 'all' ? '' : selectedMissionId, source: 'manuel', status: 'appel_reserve', callDate: '' });
     setShowForm(false);
+  };
+
+  const openForm = () => {
+    setForm((f) => ({ ...f, missionId: selectedMissionId === 'all' ? '' : selectedMissionId }));
+    setShowForm(true);
   };
 
   const handleDrop = async (status) => {
@@ -31,8 +41,8 @@ export default function PipelineView({ missions, leadsState }) {
     setDragging(null); setDragOver(null);
   };
 
-  const gagne = leads.filter(l => l.status === 'gagne').length;
-  const total = leads.length;
+  const gagne = filteredLeads.filter(l => l.status === 'gagne').length;
+  const total = filteredLeads.length;
   const taux = total > 0 ? Math.round((gagne / total) * 100) : 0;
 
   if (loading) return <div className={styles.loading}>Chargement…</div>;
@@ -45,8 +55,31 @@ export default function PipelineView({ missions, leadsState }) {
           <h1 className={styles.title}>Pipeline</h1>
           <p className={styles.subtitle}>{total} lead{total > 1 ? 's' : ''} · {taux}% conversion · {gagne} gagné{gagne > 1 ? 's' : ''}</p>
         </div>
-        <button className={styles.primaryBtn} onClick={() => setShowForm(!showForm)}>+ Nouveau lead</button>
+        <button className={styles.primaryBtn} onClick={() => showForm ? setShowForm(false) : openForm()}>+ Nouveau lead</button>
       </header>
+
+      <div className={styles.missionTabs}>
+        <button
+          className={`${styles.missionTab} ${selectedMissionId === 'all' ? styles.missionTabActive : ''}`}
+          onClick={() => setSelectedMissionId('all')}
+        >
+          Tous
+          <span className={styles.missionTabCount}>{leads.length}</span>
+        </button>
+        {missions.map((m) => {
+          const count = leads.filter((l) => l.mission_id === m.id).length;
+          return (
+            <button
+              key={m.id}
+              className={`${styles.missionTab} ${selectedMissionId === m.id ? styles.missionTabActive : ''}`}
+              onClick={() => setSelectedMissionId(m.id)}
+            >
+              {m.name}
+              <span className={styles.missionTabCount}>{count}</span>
+            </button>
+          );
+        })}
+      </div>
 
       {showForm && (
         <form onSubmit={handleAdd} className={styles.form}>
@@ -67,7 +100,7 @@ export default function PipelineView({ missions, leadsState }) {
 
       <div className={styles.kanban}>
         {STATUTS.map((statut) => {
-          const col = leads.filter((l) => l.status === statut.id);
+          const col = filteredLeads.filter((l) => l.status === statut.id);
           const isOver = dragOver === statut.id;
           return (
             <div
