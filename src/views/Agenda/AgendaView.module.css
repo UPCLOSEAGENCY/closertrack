@@ -1,119 +1,88 @@
-.page { padding: 32px 32px 0 48px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-
-.eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #e9ab3a; font-weight: 600; margin-bottom: 6px; }
-.head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
-.headLeft { display: flex; flex-direction: column; }
-.headRight { display: flex; align-items: center; gap: 10px; }
-.title { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #f0f0f5; margin: 0; letter-spacing: -1px; }
-
-.navRow { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 4px; }
-.navBtn { width: 30px; height: 30px; background: transparent; border: none; color: rgba(255,255,255,0.5); font-size: 14px; cursor: pointer; border-radius: 7px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.page { padding: 32px 0 0 48px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #e9ab3a; font-weight: 700; margin-bottom: 4px; }
+.head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0; padding-right: 32px; }
+.title { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: #f0f0f5; margin: 0; letter-spacing: -0.5px; }
+.headRight { display: flex; align-items: center; gap: 8px; }
+.navRow { display: flex; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 3px; gap: 2px; }
+.navBtn { width: 28px; height: 28px; background: transparent; border: none; color: rgba(255,255,255,0.5); font-size: 12px; cursor: pointer; border-radius: 7px; display: flex; align-items: center; justify-content: center; transition: all 0.1s; }
 .navBtn:hover { background: rgba(255,255,255,0.08); color: #f0f0f5; }
-.todayBtn { padding: 5px 12px; background: transparent; border: none; color: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 7px; transition: all 0.15s; }
-.todayBtn:hover { background: rgba(255,255,255,0.08); color: #f0f0f5; }
-.monthLabel { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #f0f0f5; padding: 0 8px; min-width: 110px; text-align: center; text-transform: capitalize; }
+.todayBtn { padding: 4px 10px; background: transparent; border: none; color: rgba(255,255,255,0.55); font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 7px; transition: all 0.1s; }
+.todayBtn:hover { background: rgba(255,255,255,0.06); color: #f0f0f5; }
+.monthLabel { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: #f0f0f5; padding: 0 10px; min-width: 100px; text-align: center; text-transform: capitalize; }
+.calPickerBtn { padding: 7px 13px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; color: rgba(255,255,255,0.5); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+.calPickerBtn:hover, .calPickerBtnActive { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.14); }
+.addBtn { padding: 7px 14px; background: linear-gradient(135deg, #e9ab3a, #c8892a); border: none; border-radius: 9px; color: #09090f; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; }
+.primaryBtn { padding: 11px 22px; background: linear-gradient(135deg, #e9ab3a, #c8892a); border: none; border-radius: 10px; color: #09090f; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; }
 
-.calPickerBtn { padding: 8px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; color: rgba(255,255,255,0.5); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.15s; }
-.calPickerBtn:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.8); }
-.newEventBtn { padding: 8px 16px; background: linear-gradient(135deg, #e9ab3a, #c8892a); border: none; border-radius: 9px; color: #09090f; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; transition: opacity 0.15s; }
-.newEventBtn:hover { opacity: 0.85; }
+/* Panel */
+.panel { background: #0b0b16; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; margin-bottom: 14px; flex-shrink: 0; margin-right: 32px; display: flex; flex-wrap: wrap; gap: 20px; }
+.panelAccount { display: flex; flex-direction: column; gap: 8px; min-width: 200px; }
+.panelAccountHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.panelAccountDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.panelAccountEmail { font-size: 12px; color: rgba(255,255,255,0.7); font-family: 'Syne', sans-serif; font-weight: 700; flex: 1; }
+.panelRemove { background: transparent; border: none; color: rgba(255,255,255,0.2); font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: color 0.15s; }
+.panelRemove:hover { color: #f87171; }
+.panelCal { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 5px 8px; border-radius: 7px; transition: background 0.1s; }
+.panelCal:hover { background: rgba(255,255,255,0.04); }
+.panelCal input { cursor: pointer; accent-color: #e9ab3a; }
+.panelCalDot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; transition: opacity 0.2s; }
+.panelCalName { font-size: 12px; color: rgba(255,255,255,0.65); font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; }
+.panelAddAccount { padding: 8px 14px; background: transparent; border: 1px dashed rgba(255,255,255,0.1); border-radius: 9px; color: rgba(255,255,255,0.35); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; align-self: flex-start; transition: all 0.15s; }
+.panelAddAccount:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
 
-.primaryBtn { padding: 10px 20px; background: linear-gradient(135deg, #e9ab3a, #c8892a); border: none; border-radius: 10px; color: #09090f; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; }
-.ghostBtn { padding: 9px 16px; background: transparent; border: 1px solid rgba(255,255,255,0.1); border-radius: 9px; color: rgba(255,255,255,0.4); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
-
-/* Account picker */
-.calPicker { background: #0d0d18; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; flex-shrink: 0; }
-.calPickerTitle { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.25); width: 100%; margin-bottom: 4px; }
-.calPickerItem { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 12px; border-radius: 9px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.15s; }
-.calPickerItem:hover { background: rgba(255,255,255,0.07); }
-.calPickerItem input { cursor: pointer; accent-color: #e9ab3a; }
-.calPickerDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.calPickerName { font-size: 12px; color: rgba(255,255,255,0.65); font-family: 'DM Sans', sans-serif; }
-.removeAccountBtn { background: transparent; border: none; color: rgba(255,255,255,0.15); font-size: 15px; cursor: pointer; margin-left: 6px; line-height: 1; transition: color 0.15s; }
-.removeAccountBtn:hover { color: #f87171; }
-.addAccountBtn { padding: 8px 14px; background: transparent; border: 1px dashed rgba(255,255,255,0.12); border-radius: 9px; color: rgba(255,255,255,0.35); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.15s; }
-.addAccountBtn:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
-
-.loading { display: flex; align-items: center; justify-content: center; flex: 1; color: rgba(255,255,255,0.25); font-family: 'DM Sans', sans-serif; font-size: 14px; }
-
-/* Empty state */
+.loading { display: flex; align-items: center; justify-content: center; flex: 1; color: rgba(255,255,255,0.2); font-family: 'DM Sans', sans-serif; font-size: 13px; gap: 10px; }
 .empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding-bottom: 60px; }
-.emptyIcon { font-size: 48px; }
-.emptyTitle { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: #f0f0f5; margin: 0; }
-.emptyDesc { font-size: 14px; color: rgba(255,255,255,0.35); margin: 0; text-align: center; max-width: 360px; line-height: 1.6; }
+.emptyIcon { font-size: 44px; }
+.emptyTitle { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: #f0f0f5; margin: 0; }
+.emptyDesc { font-size: 13px; color: rgba(255,255,255,0.35); text-align: center; max-width: 340px; line-height: 1.6; margin: 0; }
 
-/* ─── Calendar Grid ──────────────────────────────────────────────── */
-.calendarWrap { flex: 1; display: flex; flex-direction: column; min-height: 0; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px 16px 0 0; overflow: hidden; background: #09090f; }
-
-.calHeader { display: grid; grid-template-columns: 52px repeat(7, 1fr); border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; background: #0b0b16; }
-.timeGutter { border-right: 1px solid rgba(255,255,255,0.05); }
-.dayHeader { padding: 14px 8px 12px; text-align: center; border-left: 1px solid rgba(255,255,255,0.04); }
-.dayHeaderToday { background: rgba(233,171,58,0.04); }
-.dayName { display: block; font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; }
-.dayNum { display: inline-flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: rgba(255,255,255,0.55); width: 34px; height: 34px; border-radius: 50%; }
+/* Calendar */
+.calWrap { flex: 1; display: flex; flex-direction: column; min-height: 0; border-top: 1px solid rgba(255,255,255,0.05); }
+.calHead { display: grid; grid-template-columns: 48px repeat(7,1fr); border-bottom: 1px solid rgba(255,255,255,0.06); background: #0a0a14; flex-shrink: 0; }
+.gutter { border-right: 1px solid rgba(255,255,255,0.05); }
+.dayHead { padding: 12px 0 10px; text-align: center; border-left: 1px solid rgba(255,255,255,0.04); }
+.dayHeadToday { background: rgba(233,171,58,0.04); }
+.dayName { display: block; font-size: 9px; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; margin-bottom: 6px; }
+.dayNum { display: inline-flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.5); width: 32px; height: 32px; border-radius: 50%; }
 .dayNumToday { background: #e9ab3a; color: #09090f; }
-
-.calBody { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 52px repeat(7, 1fr); scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; min-height: 0; }
-
-.timeGutter { display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); }
-.timeSlot { height: 64px; padding: 6px 8px 0 0; font-size: 10px; color: rgba(255,255,255,0.18); text-align: right; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-family: 'DM Sans', sans-serif; font-weight: 500; letter-spacing: 0.3px; }
-
+.calBody { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 48px repeat(7,1fr); scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.06) transparent; }
+.gutter { display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); }
+.hourLabel { height: 64px; padding: 5px 8px 0 0; font-size: 9px; color: rgba(255,255,255,0.15); text-align: right; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-family: 'DM Sans', sans-serif; font-weight: 600; }
 .dayCol { position: relative; border-left: 1px solid rgba(255,255,255,0.04); }
-.dayColToday { background: rgba(233,171,58,0.02); }
-.hourCell { height: 64px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.dayColToday { background: rgba(233,171,58,0.015); }
+.cell { height: 64px; border-bottom: 1px solid rgba(255,255,255,0.03); }
 
-/* ─── Event Cards ──────────────────────────────────────────────── */
-.event {
-  position: absolute;
-  left: 3px;
-  right: 3px;
-  border-radius: 7px;
-  padding: 5px 8px;
-  cursor: pointer;
-  overflow: hidden;
-  z-index: 1;
-  transition: all 0.15s;
-  border-left: 3px solid rgba(255,255,255,0.4);
+/* Events */
+.evt {
+  position: absolute; left: 3px; right: 3px;
+  border-radius: 6px;
+  cursor: pointer; overflow: hidden; z-index: 1;
+  transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+  background: color-mix(in srgb, var(--c) 18%, #09090f);
+  border-left: 3px solid var(--c);
 }
+.evt:hover { filter: brightness(1.25); transform: scaleX(1.02); z-index: 2; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.evtInner { padding: 4px 6px; height: 100%; }
+.evtTitle { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.9); line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.evtTime { font-size: 9px; color: rgba(255,255,255,0.5); margin-top: 2px; font-weight: 500; }
 
-.event:hover {
-  filter: brightness(1.15);
-  transform: translateX(1px);
-  z-index: 2;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-}
-
-.eventTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.95);
-  line-height: 1.3;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.eventTime {
-  font-size: 10px;
-  color: rgba(255,255,255,0.65);
-  margin-top: 2px;
-  font-weight: 500;
-}
-
-/* ─── Modal ──────────────────────────────────────────────── */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(6px); }
-.modalCard { background: #0f0f1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 28px; width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 0; box-shadow: 0 24px 60px rgba(0,0,0,0.6); }
-.modalAccountBadge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; margin-bottom: 16px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.3px; }
-.modalTitle { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: #f0f0f5; margin: 0 0 20px; }
-.editField { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-.editRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.editLabel { font-size: 10px; text-transform: uppercase; letter-spacing: 0.7px; color: rgba(255,255,255,0.3); font-weight: 600; }
-.editInput { padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; color: #f0f0f5; font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; width: 100%; box-sizing: border-box; transition: border-color 0.15s; }
-.editInput:focus { border-color: rgba(233,171,58,0.5); background: rgba(233,171,58,0.04); }
-.editTextarea { padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; color: #f0f0f5; font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; width: 100%; box-sizing: border-box; resize: none; transition: border-color 0.15s; }
-.editTextarea:focus { border-color: rgba(233,171,58,0.5); }
-.modalActions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
-.dangerBtn { padding: 9px 16px; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); border-radius: 9px; color: #f87171; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
-.dangerBtn:hover { background: rgba(248,113,113,0.15); }
+/* Modal */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(8px); }
+.modalCard { background: #0f0f1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; width: 100%; max-width: 460px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.7); display: flex; }
+.modalColor { width: 5px; flex-shrink: 0; }
+.modalBody { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 0; }
+.modalMeta { font-size: 10px; color: rgba(255,255,255,0.25); margin-bottom: 6px; font-family: 'DM Sans', sans-serif; }
+.modalTitle { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; color: #f0f0f5; margin: 0 0 18px; }
+.mField { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.mRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mLabel { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.25); font-weight: 700; }
+.mInput { padding: 9px 11px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; color: #f0f0f5; font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; width: 100%; box-sizing: border-box; transition: border-color 0.15s; }
+.mInput:focus { border-color: rgba(233,171,58,0.4); background: rgba(233,171,58,0.03); }
+.mTextarea { padding: 9px 11px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; color: #f0f0f5; font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; width: 100%; box-sizing: border-box; resize: none; transition: border-color 0.15s; }
+.mTextarea:focus { border-color: rgba(233,171,58,0.4); }
+.mActions { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+.mDanger { padding: 8px 14px; background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2); border-radius: 8px; color: #f87171; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+.mDanger:hover { background: rgba(248,113,113,0.14); }
+.mGhost { padding: 8px 14px; background: transparent; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: rgba(255,255,255,0.35); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; }
+.mSave { padding: 8px 16px; background: linear-gradient(135deg,#e9ab3a,#c8892a); border: none; border-radius: 8px; color: #09090f; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; }
+.mSave:disabled { opacity: 0.5; cursor: not-allowed; }
