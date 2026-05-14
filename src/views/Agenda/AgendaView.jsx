@@ -200,24 +200,26 @@ export default function AgendaView() {
 
       {/* Panel agendas */}
       {panel && (
-        <div className={styles.panel} ref={panelRef}>
-          {accounts.map((acct, ai) => {
-            const cals = (load('ct_gcal_cals',{})[acct.email]||[]);
+        <div className={styles.panel}>
+          {accounts.map((acct) => {
+            const storedCals = load('ct_gcal_cals', {});
+            const cals = storedCals[acct.email] || [];
             return (
               <div key={acct.email} className={styles.panelAccount}>
                 <div className={styles.panelAccountHeader}>
                   <span className={styles.panelAccountDot} style={{background: PALETTE[acct.colorIndex % PALETTE.length]}} />
                   <span className={styles.panelAccountEmail}>{acct.email}</span>
-                  <button className={styles.panelRemove} onClick={()=>removeAccount(acct.email)}>Déconnecter</button>
+                  <button className={styles.panelRemove} onClick={()=>removeAccount(acct.email)}>✕ Retirer</button>
                 </div>
+                {cals.length === 0 && <span className={styles.panelCalName} style={{opacity:0.3,paddingLeft:8}}>Chargement...</span>}
                 {cals.map(cal => {
-                  const key = cal.accountEmail+'::'+cal.id;
+                  const key = acct.email+'::'+cal.id;
                   const on  = enabledCals[key] !== false;
                   return (
-                    <label key={key} className={styles.panelCal}>
-                      <input type="checkbox" checked={on} onChange={()=>toggleCal(key)} />
-                      <span className={styles.panelCalDot} style={{background: cal.color, opacity: on?1:0.35}} />
-                      <span className={styles.panelCalName} style={{opacity: on?1:0.4}}>{cal.name}</span>
+                    <label key={key} className={styles.panelCal} style={{cursor:'pointer'}}>
+                      <input type="checkbox" checked={on} onChange={()=>toggleCal(key)} style={{cursor:'pointer'}} />
+                      <span className={styles.panelCalDot} style={{background: cal.color}} />
+                      <span className={styles.panelCalName} style={{opacity: on ? 1 : 0.35, textDecoration: on ? 'none' : 'line-through'}}>{cal.name}</span>
                     </label>
                   );
                 })}
