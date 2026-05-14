@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import { useAppData } from './hooks/useAppData.js';
+import { supabase } from './lib/supabase.js';
 import { currentMonth } from './lib/commissions.js';
 import Header from './components/Header.jsx';
 import Dashboard from './views/Dashboard.jsx';
@@ -11,6 +12,7 @@ import InvoiceView from './views/Invoice/InvoiceView.jsx';
 import PipelineView from './views/Pipeline/PipelineView.jsx';
 import AgendaView from './views/Agenda/AgendaView.jsx';
 import SettingsView from './views/Settings/SettingsView.jsx';
+import Pricing from './views/Pricing.jsx';
 import AuthPage from './views/AuthPage.jsx';
 import Modal from './components/Modal.jsx';
 import MissionForm from './components/MissionForm.jsx';
@@ -23,9 +25,25 @@ function AppInner() {
   const [view, setView] = useState('dashboard');
   const [selectedMissionId, setSelectedMissionId] = useState(null);
   const [modal, setModal] = useState(null);
+  const [subscribed, setSubscribed] = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
+    // Vérifie si abonné via metadata Supabase
+    supabase.from('profiles').select('subscribed').eq('id', user.id).single()
+      .then(({ data }) => setSubscribed(data?.subscribed ?? false));
+    // Détecte retour Stripe
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('subscribed') === 'true') {
+      supabase.from('profiles').update({ subscribed: true }).eq('id', user.id);
+      setSubscribed(true);
+      window.history.replaceState({}, '', '/');
+    }
+  }, [user]);
 
   if (!user) return <AuthPage />;
-  if (loading) return <div style={{ minHeight: '100vh', background: '#08080e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>Chargement…</div>;
+  if (loading || subscribed === null) return <div style={{ minHeight: '100vh', background: '#08080e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>Chargement…</div>;
+  if (!subscribed) return <Pricing />;
 
   const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? null;
   const goView = (next) => { setSelectedMissionId(null); setView(next); };

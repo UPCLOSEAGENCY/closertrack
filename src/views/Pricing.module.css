@@ -1,0 +1,17 @@
+.page { min-height: 100vh; background: #08080e; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; }
+.hero { text-align: center; margin-bottom: 48px; }
+.badge { display: inline-block; padding: 6px 16px; background: rgba(233,171,58,0.15); border: 1px solid rgba(233,171,58,0.3); border-radius: 20px; font-size: 12px; font-weight: 700; color: #e9ab3a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; }
+.title { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: #f0f0f5; margin: 0 0 16px; line-height: 1.15; }
+.subtitle { font-size: 18px; color: rgba(255,255,255,0.45); margin: 0; }
+.card { width: 100%; max-width: 480px; background: #101018; border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 40px; }
+.cardTop { text-align: center; margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.price { display: flex; align-items: baseline; justify-content: center; gap: 4px; margin-bottom: 8px; }
+.amount { font-family: 'Syne', sans-serif; font-size: 56px; font-weight: 800; color: #e9ab3a; }
+.period { font-size: 20px; color: rgba(255,255,255,0.4); }
+.priceNote { font-size: 13px; color: rgba(255,255,255,0.3); }
+.features { list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-direction: column; gap: 14px; }
+.feature { font-size: 15px; color: rgba(255,255,255,0.7); font-family: 'DM Sans', sans-serif; }
+.cta { width: 100%; padding: 16px; background: linear-gradient(135deg, #e9ab3a, #c8892a); border: none; border-radius: 12px; color: #08080e; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px; cursor: pointer; transition: opacity 0.15s; margin-bottom: 16px; }
+.cta:disabled { opacity: 0.6; cursor: not-allowed; }
+.cta:not(:disabled):hover { opacity: 0.9; }
+.guarantee { font-size: 12px; color: rgba(255,255,255,0.25); text-align: center; margin: 0; }
