@@ -8,6 +8,7 @@ import Forecast from './views/Forecast.jsx';
 import MissionsView from './views/MissionsView.jsx';
 import MissionDetail from './views/MissionDetail.jsx';
 import InvoiceView from './views/Invoice/InvoiceView.jsx';
+import PipelineView from './views/Pipeline/PipelineView.jsx';
 import AuthPage from './views/AuthPage.jsx';
 import Modal from './components/Modal.jsx';
 import MissionForm from './components/MissionForm.jsx';
@@ -22,14 +23,7 @@ function AppInner() {
   const [modal, setModal] = useState(null);
 
   if (!user) return <AuthPage />;
-
-  if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#08080e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>
-        Chargement…
-      </div>
-    );
-  }
+  if (loading) return <div style={{ minHeight: '100vh', background: '#08080e', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>Chargement…</div>;
 
   const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? null;
   const goView = (next) => { setSelectedMissionId(null); setView(next); };
@@ -40,10 +34,11 @@ function AppInner() {
       <Header view={view} onChangeView={goView} onNewMission={() => setModal({ kind: 'mission' })} user={user} onSignOut={signOut} />
       <main className={styles.main}>
         {view === 'dashboard' && <Dashboard missions={missions} sales={sales} onOpenMission={openMission} />}
-        {view === 'forecast' && <Forecast missions={missions} sales={sales} />}
-        {view === 'invoice' && <InvoiceView missions={missions} sales={sales} />}
-        {view === 'missions' && !selectedMission && <MissionsView missions={missions} sales={sales} onOpen={openMission} onNewMission={() => setModal({ kind: 'mission' })} />}
-        {view === 'missions' && selectedMission && (
+        {view === 'forecast'  && <Forecast missions={missions} sales={sales} />}
+        {view === 'pipeline'  && <PipelineView missions={missions} />}
+        {view === 'invoice'   && <InvoiceView missions={missions} sales={sales} />}
+        {view === 'missions'  && !selectedMission && <MissionsView missions={missions} sales={sales} onOpen={openMission} onNewMission={() => setModal({ kind: 'mission' })} />}
+        {view === 'missions'  && selectedMission && (
           <MissionDetail
             mission={selectedMission}
             sales={sales.filter((s) => s.missionId === selectedMission.id)}
@@ -59,22 +54,12 @@ function AppInner() {
       </main>
       {modal?.kind === 'mission' && (
         <Modal title={modal.mission ? 'Modifier la mission' : 'Nouvelle mission'} onClose={() => setModal(null)}>
-          <MissionForm
-            mission={modal.mission}
-            onSubmit={async (data) => { modal.mission ? await updateMission(modal.mission.id, data) : await addMission(data); setModal(null); }}
-            onCancel={() => setModal(null)}
-          />
+          <MissionForm mission={modal.mission} onSubmit={async (data) => { modal.mission ? await updateMission(modal.mission.id, data) : await addMission(data); setModal(null); }} onCancel={() => setModal(null)} />
         </Modal>
       )}
       {modal?.kind === 'sale' && (
         <Modal title={modal.sale ? 'Modifier la vente' : 'Nouvelle vente'} onClose={() => setModal(null)} size="lg">
-          <SaleForm
-            mission={missions.find((m) => m.id === modal.missionId)}
-            sale={modal.sale}
-            defaultMonth={currentMonth()}
-            onSubmit={async (data) => { modal.sale ? await updateSale(modal.sale.id, data) : await addSale({ missionId: modal.missionId, ...data }); setModal(null); }}
-            onCancel={() => setModal(null)}
-          />
+          <SaleForm mission={missions.find((m) => m.id === modal.missionId)} sale={modal.sale} defaultMonth={currentMonth()} onSubmit={async (data) => { modal.sale ? await updateSale(modal.sale.id, data) : await addSale({ missionId: modal.missionId, ...data }); setModal(null); }} onCancel={() => setModal(null)} />
         </Modal>
       )}
     </div>
@@ -82,9 +67,5 @@ function AppInner() {
 }
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <AppInner />
-    </AuthProvider>
-  );
+  return <AuthProvider><AppInner /></AuthProvider>;
 }
