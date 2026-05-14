@@ -43,3 +43,13 @@
 .modalMeta { font-size: 13px; color: rgba(255,255,255,0.4); }
 .modalDesc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; margin: 0; }
 .modalActions { display: flex; gap: 12px; margin-top: 8px; }
+
+.editField { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.editRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.editLabel { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.35); font-weight: 600; }
+.editInput { padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0f0f5; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; width: 100%; box-sizing: border-box; }
+.editInput:focus { border-color: #e9ab3a; }
+.editTextarea { padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0f0f5; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; width: 100%; box-sizing: border-box; resize: vertical; }
+.editTextarea:focus { border-color: #e9ab3a; }
+.dangerBtn { padding: 10px 18px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; color: #f87171; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
+.dangerBtn:hover { background: rgba(248,113,113,0.2); }

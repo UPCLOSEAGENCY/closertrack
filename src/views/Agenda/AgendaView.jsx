@@ -3,10 +3,7 @@ import styles from './AgendaView.module.css';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const REDIRECT_URI = 'https://closertrack.vercel.app/agenda';
-const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
-
-const HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 7h → 22h
-const DAYS_FR = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+const SCOPES = 'https://www.googleapis.com/auth/calendar';
 
 function getAuthUrl() {
   const params = new URLSearchParams({
@@ -14,6 +11,7 @@ function getAuthUrl() {
     redirect_uri: REDIRECT_URI,
     response_type: 'token',
     scope: SCOPES,
+    prompt: 'consent',
   });
   return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
 }
@@ -30,6 +28,8 @@ function getWeekDays(baseDate) {
   });
 }
 
+const HOURS = Array.from({ length: 16 }, (_, i) => i + 7);
+const DAYS_FR = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 const COLORS = ['#5ba3f5','#e9ab3a','#2dd4a0','#a78bfa','#f97316','#f43f5e','#06b6d4'];
 
 export default function AgendaView() {
@@ -38,13 +38,16 @@ export default function AgendaView() {
   const [loading, setLoading] = useState(false);
   const [weekBase, setWeekBase] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const hash = window.location.hash;
     if (hash.includes('access_token')) {
       const params = new URLSearchParams(hash.replace('#', ''));
       const t = params.get('access_token');
-      if (t) { localStorage.setItem('gcal_token', t); setToken(t); window.history.replaceState({}, '', window.location.pathname); }
+      if (t) { localStorage.setItem('gcal_token', t); setToken(t); window.history.replaceState({}, '', '/agenda'); }
     }
   }, []);
 
@@ -64,39 +67,70 @@ export default function AgendaView() {
     setLoading(false);
   };
 
+  const openEdit = (evt) => {
+    setSelectedEvent(evt);
+    setEditForm({
+      summary: evt.summary ?? '',
+      location: evt.location ?? '',
+      description: evt.description ?? '',
+      startDate: evt.start?.dateTime ? evt.start.dateTime.slice(0, 16) : '',
+      endDate: evt.end?.dateTime ? evt.end.dateTime.slice(0, 16) : '',
+    });
+    setEditing(true);
+  };
+
+  const saveEvent = async () => {
+    setSaving(true);
+    const patch = {
+      summary: editForm.summary,
+      location: editForm.location,
+      description: editForm.description,
+    };
+    if (editForm.startDate) patch.start = { dateTime: new Date(editForm.startDate).toISOString(), timeZone: 'Europe/Paris' };
+    if (editForm.endDate) patch.end = { dateTime: new Date(editForm.endDate).toISOString(), timeZone: 'Europe/Paris' };
+
+    const res = await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/primary/events/${selectedEvent.id}`,
+      {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      }
+    );
+    if (res.ok) {
+      await fetchEvents(token);
+      setEditing(false);
+      setSelectedEvent(null);
+    }
+    setSaving(false);
+  };
+
+  const deleteEvent = async (eventId) => {
+    if (!confirm('Supprimer cet événement Google Calendar ?')) return;
+    await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+      { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
+    );
+    setEvents((prev) => prev.filter((e) => e.id !== eventId));
+    setSelectedEvent(null);
+    setEditing(false);
+  };
+
   const connect    = () => { window.location.href = getAuthUrl(); };
   const disconnect = () => { localStorage.removeItem('gcal_token'); setToken(null); setEvents([]); };
   const prevWeek   = () => { const d = new Date(weekBase); d.setDate(d.getDate() - 7); setWeekBase(d); };
   const nextWeek   = () => { const d = new Date(weekBase); d.setDate(d.getDate() + 7); setWeekBase(d); };
-  const goToday    = () => setWeekBase(new Date());
 
   const weekDays = getWeekDays(weekBase);
   const today = new Date().toDateString();
 
   const getEventsForDay = (date) => {
     const dateStr = date.toISOString().slice(0, 10);
-    return events.filter(evt => {
-      const start = evt.start?.dateTime ?? evt.start?.date;
-      return start?.startsWith(dateStr);
-    });
+    return events.filter(evt => (evt.start?.dateTime ?? evt.start?.date ?? '').startsWith(dateStr));
   };
 
-  const getEventTop = (evt) => {
-    if (!evt.start?.dateTime) return 0;
-    const d = new Date(evt.start.dateTime);
-    const h = d.getHours() + d.getMinutes() / 60;
-    return Math.max(0, (h - 7) * 60);
-  };
-
-  const getEventHeight = (evt) => {
-    if (!evt.start?.dateTime || !evt.end?.dateTime) return 30;
-    const start = new Date(evt.start.dateTime);
-    const end   = new Date(evt.end.dateTime);
-    const diff  = (end - start) / 1000 / 60;
-    return Math.max(20, diff);
-  };
-
-  const formatHour = (h) => `${String(h).padStart(2,'0')}:00`;
+  const getEventTop    = (evt) => { if (!evt.start?.dateTime) return 0; const d = new Date(evt.start.dateTime); return Math.max(0, (d.getHours() + d.getMinutes() / 60 - 7) * 60); };
+  const getEventHeight = (evt) => { if (!evt.start?.dateTime || !evt.end?.dateTime) return 30; return Math.max(24, (new Date(evt.end.dateTime) - new Date(evt.start.dateTime)) / 60000); };
 
   const monthLabel = weekDays[0].toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
 
@@ -112,7 +146,7 @@ export default function AgendaView() {
             <>
               <div className={styles.navRow}>
                 <button className={styles.navBtn} onClick={prevWeek}>←</button>
-                <button className={styles.todayBtn} onClick={goToday}>Aujourd'hui</button>
+                <button className={styles.todayBtn} onClick={() => setWeekBase(new Date())}>Aujourd'hui</button>
                 <button className={styles.navBtn} onClick={nextWeek}>→</button>
                 <span className={styles.monthLabel}>{monthLabel}</span>
               </div>
@@ -128,7 +162,7 @@ export default function AgendaView() {
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>📅</div>
           <h2 className={styles.emptyTitle}>Connecte ton Google Calendar</h2>
-          <p className={styles.emptyDesc}>Visualise et gère tes RDV directement depuis CloserTrack.</p>
+          <p className={styles.emptyDesc}>Visualise et modifie tes RDV directement depuis CloserTrack.</p>
           <button className={styles.primaryBtn} onClick={connect}>Connecter maintenant</button>
         </div>
       )}
@@ -137,80 +171,73 @@ export default function AgendaView() {
 
       {token && !loading && (
         <div className={styles.calendarWrap}>
-          {/* Header jours */}
           <div className={styles.calHeader}>
             <div className={styles.timeGutter} />
             {weekDays.map((day, i) => (
               <div key={i} className={`${styles.dayHeader} ${day.toDateString() === today ? styles.dayHeaderToday : ''}`}>
                 <span className={styles.dayName}>{DAYS_FR[day.getDay()]}</span>
-                <span className={`${styles.dayNum} ${day.toDateString() === today ? styles.dayNumToday : ''}`}>
-                  {day.getDate()}
-                </span>
+                <span className={`${styles.dayNum} ${day.toDateString() === today ? styles.dayNumToday : ''}`}>{day.getDate()}</span>
               </div>
             ))}
           </div>
-
-          {/* Grille */}
           <div className={styles.calBody}>
-            {/* Colonne heures */}
             <div className={styles.timeGutter}>
-              {HOURS.map(h => (
-                <div key={h} className={styles.timeSlot}>{formatHour(h)}</div>
-              ))}
+              {HOURS.map(h => <div key={h} className={styles.timeSlot}>{String(h).padStart(2,'0')}:00</div>)}
             </div>
-
-            {/* Colonnes jours */}
-            {weekDays.map((day, di) => {
-              const dayEvts = getEventsForDay(day);
-              return (
-                <div key={di} className={`${styles.dayCol} ${day.toDateString() === today ? styles.dayColToday : ''}`}>
-                  {HOURS.map(h => <div key={h} className={styles.hourCell} />)}
-                  {dayEvts.map((evt, ei) => (
-                    <div
-                      key={evt.id}
-                      className={styles.event}
-                      style={{
-                        top: `${getEventTop(evt)}px`,
-                        height: `${getEventHeight(evt)}px`,
-                        background: COLORS[ei % COLORS.length],
-                      }}
-                      onClick={() => setSelectedEvent(evt)}
-                    >
-                      <div className={styles.eventTitle}>{evt.summary ?? '(Sans titre)'}</div>
-                      {evt.start?.dateTime && (
-                        <div className={styles.eventTime}>
-                          {new Date(evt.start.dateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
+            {weekDays.map((day, di) => (
+              <div key={di} className={`${styles.dayCol} ${day.toDateString() === today ? styles.dayColToday : ''}`}>
+                {HOURS.map(h => <div key={h} className={styles.hourCell} />)}
+                {getEventsForDay(day).map((evt, ei) => (
+                  <div
+                    key={evt.id}
+                    className={styles.event}
+                    style={{ top: `${getEventTop(evt)}px`, height: `${getEventHeight(evt)}px`, background: COLORS[ei % COLORS.length] }}
+                    onClick={() => openEdit(evt)}
+                  >
+                    <div className={styles.eventTitle}>{evt.summary ?? '(Sans titre)'}</div>
+                    {evt.start?.dateTime && <div className={styles.eventTime}>{new Date(evt.start.dateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</div>}
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      {selectedEvent && (
-        <div className={styles.modal} onClick={() => setSelectedEvent(null)}>
+      {editing && selectedEvent && (
+        <div className={styles.modal} onClick={() => { setEditing(false); setSelectedEvent(null); }}>
           <div className={styles.modalCard} onClick={e => e.stopPropagation()}>
-            <h3 className={styles.modalTitle}>{selectedEvent.summary}</h3>
-            {selectedEvent.start?.dateTime && (
-              <div className={styles.modalMeta}>
-                🗓 {new Date(selectedEvent.start.dateTime).toLocaleString('fr-FR', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' })}
-                {selectedEvent.end?.dateTime && ` → ${new Date(selectedEvent.end.dateTime).toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' })}`}
+            <h3 className={styles.modalTitle}>Modifier l'événement</h3>
+
+            <div className={styles.editField}>
+              <label className={styles.editLabel}>Titre</label>
+              <input className={styles.editInput} value={editForm.summary} onChange={e => setEditForm({ ...editForm, summary: e.target.value })} />
+            </div>
+            <div className={styles.editRow}>
+              <div className={styles.editField}>
+                <label className={styles.editLabel}>Début</label>
+                <input className={styles.editInput} type="datetime-local" value={editForm.startDate} onChange={e => setEditForm({ ...editForm, startDate: e.target.value })} />
               </div>
-            )}
-            {selectedEvent.location && <div className={styles.modalMeta}>📍 {selectedEvent.location}</div>}
-            {selectedEvent.attendees?.length > 0 && (
-              <div className={styles.modalMeta}>👥 {selectedEvent.attendees.map(a => a.email).join(', ')}</div>
-            )}
-            {selectedEvent.description && <p className={styles.modalDesc}>{selectedEvent.description}</p>}
+              <div className={styles.editField}>
+                <label className={styles.editLabel}>Fin</label>
+                <input className={styles.editInput} type="datetime-local" value={editForm.endDate} onChange={e => setEditForm({ ...editForm, endDate: e.target.value })} />
+              </div>
+            </div>
+            <div className={styles.editField}>
+              <label className={styles.editLabel}>Lieu</label>
+              <input className={styles.editInput} value={editForm.location} onChange={e => setEditForm({ ...editForm, location: e.target.value })} placeholder="Lien Zoom, adresse..." />
+            </div>
+            <div className={styles.editField}>
+              <label className={styles.editLabel}>Notes</label>
+              <textarea className={styles.editTextarea} value={editForm.description} onChange={e => setEditForm({ ...editForm, description: e.target.value })} rows={3} />
+            </div>
+
             <div className={styles.modalActions}>
-              <a href={selectedEvent.htmlLink} target="_blank" rel="noreferrer" className={styles.primaryBtn}>
-                Ouvrir dans Google Calendar →
-              </a>
-              <button className={styles.ghostBtn} onClick={() => setSelectedEvent(null)}>Fermer</button>
+              <button className={styles.dangerBtn} onClick={() => deleteEvent(selectedEvent.id)}>Supprimer</button>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button className={styles.ghostBtn} onClick={() => { setEditing(false); setSelectedEvent(null); }}>Annuler</button>
+                <button className={styles.primaryBtn} onClick={saveEvent} disabled={saving}>{saving ? 'Sauvegarde...' : '✓ Sauvegarder'}</button>
+              </div>
             </div>
           </div>
         </div>
