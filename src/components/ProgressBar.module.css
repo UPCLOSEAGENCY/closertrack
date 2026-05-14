@@ -1,0 +1,27 @@
+.track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.gold {
+  background: linear-gradient(90deg, var(--gold), #f5c75c);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.green {
+  background: linear-gradient(90deg, var(--green), #5be0b9);
+  box-shadow: 0 0 12px var(--green-glow);
+}
+
+.blue {
+  background: linear-gradient(90deg, var(--blue), #84baff);
+  box-shadow: 0 0 12px var(--blue-glow);
+}
