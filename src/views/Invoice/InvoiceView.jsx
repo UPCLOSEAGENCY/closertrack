@@ -11,15 +11,22 @@ export default function InvoiceView({ missions, sales }) {
   const [closer, setCloser] = useState({ name: '', email: '', address: '', siret: '', iban: '' });
   const [client, setClient] = useState({ name: '', address: '' });
   const [selectedMissionId, setSelectedMissionId] = useState('');
-  const [invoiceNumber, setInvoiceNumber] = useState('2026-001');
+  const [invoiceCounter, setInvoiceCounter] = useState(0);
   const [invoiceDate, setInvoiceDate] = useState(new Date().toLocaleDateString('fr-FR'));
   const [saved, setSaved] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     if (!user) return;
-    supabase.from('profiles').select('closer_info').eq('id', user.id).single()
-      .then(({ data }) => { if (data?.closer_info) setCloser(data.closer_info); });
+    supabase.from('profiles').select('closer_info, invoice_counter').eq('id', user.id).single()
+      .then(({ data }) => {
+        if (data?.closer_info) setCloser(data.closer_info);
+        if (data?.invoice_counter !== undefined) setInvoiceCounter(data.invoice_counter);
+      });
   }, [user]);
+
+  const year = new Date().getFullYear();
+  const invoiceNumber = `${year}-${String(invoiceCounter + 1).padStart(3, '0')}`;
 
   const mission = missions.find((m) => m.id === selectedMissionId);
   const missionSales = sales.filter((s) => s.missionId === selectedMissionId);
@@ -41,7 +48,13 @@ export default function InvoiceView({ missions, sales }) {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
+    setGenerating(true);
+    // Incrémente le compteur
+    const newCounter = invoiceCounter + 1;
+    await supabase.from('profiles').update({ invoice_counter: newCounter }).eq('id', user.id);
+    setInvoiceCounter(newCounter);
+
     const content = printRef.current.innerHTML;
     const win = window.open('', '_blank');
     win.document.write(`
@@ -80,7 +93,7 @@ export default function InvoiceView({ missions, sales }) {
     `);
     win.document.close();
     win.focus();
-    setTimeout(() => { win.print(); win.close(); }, 500);
+    setTimeout(() => { win.print(); win.close(); setGenerating(false); }, 500);
   };
 
   const invoiceHTML = canGenerate ? `
@@ -150,7 +163,7 @@ export default function InvoiceView({ missions, sales }) {
       <header className={styles.head}>
         <div className={styles.eyebrow}>Documents</div>
         <h1 className={styles.title}>Facturation</h1>
-        <p className={styles.subtitle}>Génère tes factures PDF par mission</p>
+        <p className={styles.subtitle}>Facture suivante : <strong>{invoiceNumber}</strong></p>
       </header>
 
       <div className={styles.grid}>
@@ -174,8 +187,7 @@ export default function InvoiceView({ missions, sales }) {
             <div className={styles.fields}>
               <Field label="Nom du client / Agence" value={client.name} onChange={(v) => setClient({ ...client, name: v })} placeholder="UP CLOSE AGENCY" />
               <Field label="Adresse client (optionnel)" value={client.address} onChange={(v) => setClient({ ...client, address: v })} placeholder="Adresse du client" />
-              <Field label="Numéro de facture" value={invoiceNumber} onChange={setInvoiceNumber} placeholder="2026-001" />
-              <Field label="Date" value={invoiceDate} onChange={setInvoiceDate} placeholder="14/05/2026" />
+              <Field label="Date de facture" value={invoiceDate} onChange={setInvoiceDate} placeholder="14/05/2026" />
               <div className={styles.field}>
                 <label className={styles.label}>Mission</label>
                 <select className={styles.select} value={selectedMissionId} onChange={(e) => setSelectedMissionId(e.target.value)}>
@@ -189,7 +201,7 @@ export default function InvoiceView({ missions, sales }) {
 
         <div className={styles.col}>
           <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Aperçu facture</h2>
+            <h2 className={styles.cardTitle}>Aperçu — {invoiceNumber}</h2>
             {!canGenerate ? (
               <div className={styles.empty}>Remplis les infos à gauche pour voir l'aperçu</div>
             ) : (
@@ -197,8 +209,8 @@ export default function InvoiceView({ missions, sales }) {
                 <div className={styles.previewBox}>
                   <div ref={printRef} dangerouslySetInnerHTML={{ __html: invoiceHTML }} />
                 </div>
-                <button className={styles.downloadBtn} onClick={handlePrint}>
-                  🖨️ Télécharger / Imprimer PDF
+                <button className={styles.downloadBtn} onClick={handlePrint} disabled={generating}>
+                  {generating ? 'Génération...' : '🖨️ Télécharger / Imprimer PDF'}
                 </button>
               </>
             )}
