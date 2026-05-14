@@ -6,6 +6,7 @@ const TABS = [
   { id: 'pipeline',  label: 'Pipeline' },
   { id: 'missions',  label: 'Missions' },
   { id: 'invoice',   label: 'Facturation' },
+  { id: 'settings',  label: '⚙ Paramètres' },
 ];
 
 export default function Header({ view, onChangeView, onNewMission, user, onSignOut }) {

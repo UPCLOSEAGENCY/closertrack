@@ -9,6 +9,7 @@ import MissionsView from './views/MissionsView.jsx';
 import MissionDetail from './views/MissionDetail.jsx';
 import InvoiceView from './views/Invoice/InvoiceView.jsx';
 import PipelineView from './views/Pipeline/PipelineView.jsx';
+import SettingsView from './views/Settings/SettingsView.jsx';
 import AuthPage from './views/AuthPage.jsx';
 import Modal from './components/Modal.jsx';
 import MissionForm from './components/MissionForm.jsx';
@@ -37,6 +38,7 @@ function AppInner() {
         {view === 'forecast'  && <Forecast missions={missions} sales={sales} />}
         {view === 'pipeline'  && <PipelineView missions={missions} />}
         {view === 'invoice'   && <InvoiceView missions={missions} sales={sales} />}
+        {view === 'settings'  && <SettingsView />}
         {view === 'missions'  && !selectedMission && <MissionsView missions={missions} sales={sales} onOpen={openMission} onNewMission={() => setModal({ kind: 'mission' })} />}
         {view === 'missions'  && selectedMission && (
           <MissionDetail
