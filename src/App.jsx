@@ -7,6 +7,7 @@ import Dashboard from './views/Dashboard.jsx';
 import Forecast from './views/Forecast.jsx';
 import MissionsView from './views/MissionsView.jsx';
 import MissionDetail from './views/MissionDetail.jsx';
+import InvoiceView from './views/Invoice/InvoiceView.jsx';
 import AuthPage from './views/AuthPage.jsx';
 import Modal from './components/Modal.jsx';
 import MissionForm from './components/MissionForm.jsx';
@@ -40,6 +41,7 @@ function AppInner() {
       <main className={styles.main}>
         {view === 'dashboard' && <Dashboard missions={missions} sales={sales} onOpenMission={openMission} />}
         {view === 'forecast' && <Forecast missions={missions} sales={sales} />}
+        {view === 'invoice' && <InvoiceView missions={missions} sales={sales} />}
         {view === 'missions' && !selectedMission && <MissionsView missions={missions} sales={sales} onOpen={openMission} onNewMission={() => setModal({ kind: 'mission' })} />}
         {view === 'missions' && selectedMission && (
           <MissionDetail

@@ -4,6 +4,7 @@ const TABS = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'forecast', label: 'Prévisionnel' },
   { id: 'missions', label: 'Missions' },
+  { id: 'invoice', label: 'Facturation' },
 ];
 
 export default function Header({ view, onChangeView, onNewMission, user, onSignOut }) {
@@ -38,9 +39,7 @@ export default function Header({ view, onChangeView, onNewMission, user, onSignO
         </nav>
 
         <div className={styles.right}>
-          {user && (
-            <span className={styles.userEmail}>{user.email}</span>
-          )}
+          {user && <span className={styles.userEmail}>{user.email}</span>}
           <button type="button" className={styles.cta} onClick={onNewMission}>
             + Nouvelle mission
           </button>
