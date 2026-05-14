@@ -367,3 +367,33 @@
   color: var(--text-faint);
   letter-spacing: 0.02em;
 }
+
+.inst_pending {
+  border-color: rgba(91,163,245,0.3);
+  background: rgba(91,163,245,0.05);
+}
+
+.inst_paid {
+  border-color: rgba(45,212,160,0.4);
+  background: rgba(45,212,160,0.08);
+}
+
+.inst_cancelled {
+  border-color: rgba(248,113,113,0.3);
+  background: rgba(248,113,113,0.05);
+  opacity: 0.6;
+}
+
+.installmentStatus {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.red { color: #f87171; }
+
+.cancelledCount {
+  color: #f87171;
+}
